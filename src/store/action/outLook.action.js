@@ -1,0 +1,2 @@
+export const FOLDER_LIST = 'FOLDER_LIST';
+export const SELECTED_EMAIL_LIST = 'SELECTED_EMAIL_LIST';

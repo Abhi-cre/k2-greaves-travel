@@ -1,0 +1,52 @@
+{
+  "_args": [
+    [
+      "pagination-logic@0.1.4",
+      "C:\\Users\\it-su\\Projects\\React\\global-react"
+    ]
+  ],
+  "_from": "pagination-logic@0.1.4",
+  "_id": "pagination-logic@0.1.4",
+  "_inBundle": false,
+  "_integrity": "sha1-ghcvlpUns1L4YByAfpQ3g8f/XSk=",
+  "_location": "/pagination-logic",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "pagination-logic@0.1.4",
+    "name": "pagination-logic",
+    "escapedName": "pagination-logic",
+    "rawSpec": "0.1.4",
+    "saveSpec": null,
+    "fetchSpec": "0.1.4"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/pagination-logic/-/pagination-logic-0.1.4.tgz",
+  "_spec": "0.1.4",
+  "_where": "C:\\Users\\it-su\\Projects\\React\\global-react",
+  "author": {
+    "name": "akistar"
+  },
+  "bugs": {
+    "url": "https://github.com/akistar/pagination-logic/issues"
+  },
+  "description": "Pure Javascript pagination logic without UI component",
+  "devDependencies": {
+    "ava": "^0.16.0"
+  },
+  "homepage": "https://github.com/akistar/pagination-logic#readme",
+  "license": "MIT",
+  "main": "./src/pagination-logic.js",
+  "name": "pagination-logic",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akistar/pagination-logic.git"
+  },
+  "scripts": {
+    "test": "ava ./test/*.spec.js"
+  },
+  "version": "0.1.4"
+}

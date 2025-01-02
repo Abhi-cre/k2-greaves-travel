@@ -1,0 +1,248 @@
+.ComposeWidth{min-width:150px}
+.hideClass {
+    display: none;
+  }
+  .show{display: block;}
+  .hide{display: none;}
+  a{cursor: pointer;}
+  .txtCenter{text-align: center;}
+  #load {
+    /* visibility: hidden; */
+    width: 100%;
+    left: 0;
+    height: 100%;
+    position: fixed;
+    z-index: 9999;
+    background: url("../../public/images/ajax-loader.gif") no-repeat center center
+      rgba(255, 255, 255, 0.6);
+  }
+  .load {
+    /* visibility: hidden; */
+    width: 100%;
+    left: 0;
+    height: 100%;
+    position: fixed;
+    z-index: 9999;
+  }
+  .error{color:#f00;text-align: center;}
+  .paginationlist li {
+    list-style-type: none;
+    float: left;
+    padding-right: 2px;
+  }
+  .paginationlist li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 1px solid #ddd;
+  }
+  
+  .paginationlist li a.selected {
+    background-color: #ec278e;
+    color: white;
+    border: 1px solid #ec278e;
+  }
+  .boldClass{font-weight: bold;}
+  .cursourPointer{cursor: pointer;}
+  .dropdown-menu.show
+{
+position: absolute;
+    inset: 0px auto auto 0px;
+    right: 0!important;
+    top: 54px!important;
+    left: inherit!important;
+    margin: 0px;
+    transform: translate(0px, 0px)!important;
+}
+.page-content .card {
+  max-width: 100%;
+  word-wrap: break-word;
+  background-clip: border-box;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 0.27rem;
+  margin-bottom: 1.875rem;
+  border: none;
+  width: -webkit-fill-available;
+  box-shadow: 0 2px 1px rgb(0 0 0 / 5%);
+}
+
+.disableColor{color: #ccc;}
+.cusourseFalse{cursor:none;}
+.attachmentList{width: 100%;float: left;}
+.newfolder{float: left;width: 100%;}
+.emailRel{width: 273px;}
+.emailList {padding-top: 0px;}
+.emailList .users-list-padding {padding-top: 0px;}
+.topselectBox{width: 115px;}
+.normalClass{font-weight: normal;}
+.content-right .accordion-body { float: left;}
+.navbar li a { 
+  text-decoration: none;
+  color: #000;
+}
+
+body{font-family: 'Roboto', sans-serif!important;position:fixed;
+  overflow:hidden;width: 100%; font-size: 15px!important;}
+a,p{font-family: 'Roboto', sans-serif!important; font-size: 15px!important;margin: 0px!important;padding: 0;} 
+.disablecolor{color: #222!important;border-color:#fff!important;}
+
+.updateMessage {
+  text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+  }
+  .message-green{color:green}
+  .message-red{color:red}
+  .txt-right{text-align: right;}
+  .formdate{border: none!important;}
+  .addInternary{
+    background-color: #1fb5eb!important;
+    color: #fff!important;
+    padding: 0.12rem 1rem;
+    margin-top: 6px!important
+  }
+  .removeInternary{
+    background-color: #c61a1a;
+    color: #fff;
+    padding: .6rem 2rem;
+  }
+  .addInternaryService{
+    background-color: #1a68c6!important;
+    color: #fff!important;
+    padding: 0.12rem 1rem;
+    margin-top: 6px!important
+  }
+  .addInternaryService:hover, .removeInternary:hover, .addInternary:hover{
+    background-color: #ec278e!important;
+    color: #fff!important;
+  }
+  .width100{width: 100%;}
+  .ModifyModal{
+    background: rgba(0, 0, 0, .6);
+    }
+    .modal-backdrop{
+    height: inherit!important;
+    }
+    .questionaireAns{font-size: 12px;}
+    .borderbottom{border-bottom: 1px solid #d6dee1!important;margin-bottom: 15px 15px;}
+    .border-box{border: 1px solid #d6dee1!important;padding: 15px;}
+    
+      @media (min-width: 768px) {
+        .navbar-nav li:hover>.dropdown-menu {
+          display: block;
+          }
+      }
+      .dreavesStatus{min-width: 180px;}
+      .width50{width: 60px;}
+      .width150{width: 150px;}
+      .width250{width: 180px;}
+      .width200{width: 200px;}
+      .formdate .form-control{padding:4px 0.2em}
+      .maxWwidth90{max-width: 90px;}
+      .maxWwidth100{max-width: 150px;}
+      .maxWwidth200{max-width: 200px;}
+      .width220{width: 220px;max-width: 220px;}
+      .backgroundtr{background-color: #ccc;}
+      .whiteBackgound{background-color: #fff;}
+      .widthFull{width: 100%;}
+      .width400{width: 400px;max-width: 400px;}
+      .width250{width: 250px;max-width: 250px;}
+      .floatright{float:right}
+      .modal{
+        z-index: 9999!important;
+        top:86px;
+        bottom:286px;
+        background: rgba(0,0,0,0.5);
+      }
+      .modal-body{
+        max-height:400px;
+        overflow-y: scroll;
+      }
+      .rw-widget-picker {
+        min-height: 28px!important;
+      }
+      .cmyNjn{
+        height: initial;
+        z-index: 999;
+      }
+      .fDbOPw,.lmCTmJ{
+        min-height: 27px!important;
+      }
+      .gyFedp {
+        z-index: 999 !important;
+    }
+      .cmyNjn > .wrapper,.gyFedp > .wrapper {
+        border-radius: 8px !important;
+       
+      }
+
+      @media (min-width: 1200px)
+    {
+      .modal-xl {
+    --bs-modal-width: 1500px;
+      }
+      
+    }
+    .react-datetime-picker{
+      width: 95%!important;
+    }
+   .react-datetime-picker__wrapper {
+    border:thin solid #ced4da!important;
+    border-radius: 6px;
+    background-color: #fff!important;
+    
+   }
+      
+   .react-datetime-picker svg{
+  color: #c61a1a!important;
+}
+.borderBottom{
+  border-bottom: 1px solid #ccc;;
+}
+.serviceList-html{
+  width: 100%;
+  padding: 10px 10px;
+  border:thin solid #ced4da;
+  max-height: 100px;
+  overflow-y: scroll;
+
+}
+.serviceListDisplay{padding-right: 20px;font-size: 14px;}
+
+.authontication-page{
+  /* border: 1px solid #da930f; */
+  padding: 30px 20px 60px;
+  max-width: 860px;
+  margin: 50px auto;
+  text-align: center;
+}
+.mAuth img{
+width: 200px;
+}
+.mAuth{
+  margin: 20px 0;
+}
+.authontication-page button{
+  background: #da930f;
+  padding: 12px 26px;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  border-radius: 6px;
+
+}
+.authontication-page .txt-white {
+  color:#fff!important ;
+}
+.authontication-error{
+  padding-bottom: 20px;
+  font-weight: bold;
+  font-size: 30px!important;
+  color: #f00;
+}
+.entance-vendor-txt{display: table-caption;
+  line-height: 13px;
+}
+.notebox .k-editor{max-height: 200px;}
