@@ -64,9 +64,14 @@ class ExcelDownloadButton extends React.Component {
 
   render() {
     return (
-      <button onClick={this.downloadExcel} type="button" className="btn btn-outlined ms-1">
-        <i className="fa-sharp fa-solid fa-download"></i> Download Excel
-      </button>
+      <div>
+        <img
+          style={{ height: '40px', width:"40px", cursor: 'pointer' }}
+          src="/images/downloadExcel.png"  
+          alt="Download Excel"
+          onClick={this.downloadExcel} 
+        />
+      </div>
     );
   }
 }
