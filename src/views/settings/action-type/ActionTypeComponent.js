@@ -21,7 +21,7 @@ class ActionTypeComponent extends React.Component {
       selectedActionType: {},
       perPage: 8,
       currentPage: 1,
-      keyword: "",
+      filteredNames: [],
     };
   }
   componentDidMount() {
@@ -216,7 +216,15 @@ class ActionTypeComponent extends React.Component {
   handleChange = (e) => {
     const name = e.target.name;
     let value = e.target.value;
-    this.setState({ ...this.state, [name]: value });
+
+    if (name === "keyword") {
+      const filteredNames = this.state.actionTypeListFilter
+        .map((user) => user.name)
+        .filter((name) => name.toLowerCase().includes(value.toLowerCase()));
+      this.setState({ keyword: value, filteredNames: filteredNames });
+    } else {
+      this.setState({ [name]: value });
+    }
   };
 
   render() {
@@ -246,14 +254,29 @@ class ActionTypeComponent extends React.Component {
                 <div className="row g-3 align-items-center">
                   <div className="col-sm-3">
                     <label>Search </label>
-                    <input
+                    {/* <input
                       type="text"
                       name="keyword"
                       value={this.state.keyword}
                       onChange={this.handleChange}
                       className="form-control"
                       placeholder=""
+                    /> */}
+
+                    <input
+                      type="text"
+                      name="keyword"
+                      value={this.state.keyword}
+                      onChange={this.handleChange}
+                      className="form-control"
+                      placeholder="Name"
+                      list="nameSuggestions"
                     />
+                    <datalist id="nameSuggestions">
+                      {this.state.filteredNames.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
                   </div>
 
                   <div className="col-sm-1 pt-4">
@@ -276,17 +299,6 @@ class ActionTypeComponent extends React.Component {
                   </div>
                 </div>
               </div>
-              {/* <div className="col-md-2 text-end">
-                    <br/>
-                    <a  onClick={()=>this.reloadWindow()}><img style={{'height': '40px'}} src="images/reload.png"/></a>  
-                    <button data-bs-toggle="modal" data-bs-target="#actionTypeAdd" className="btn btn-outlined"> <i className="fa-sharp fa-solid fa-plus"></i> Add </button>
-                    </div>
-                    <div className="d-flex justify-content-start mb-3">
-    <button onClick={this.downloadExcel} type="button" className="btn btn-outlined ms-2">
-        <i className="fa-sharp fa-solid fa-download"></i> Download Excel
-    </button>
-</div> */}
-
               <div className="d-flex align-items-center justify-content-end">
                 <a onClick={() => this.reloadWindow()}>
                   <img
