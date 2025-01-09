@@ -361,7 +361,7 @@ class CityComponent extends React.Component {
                 <ExcelDownloadButton
                   data={dataToExport}
                   columns={["countryName", "stateName", "cityName"]}
-                  fileName="ActionTypes.xlsx"
+                  fileName="City.xlsx"
                   sheetName="Action Types"
                 />
               </div>

@@ -323,8 +323,8 @@ class AgencyTypeComponent extends React.Component {
                 <ExcelDownloadButton
                   data={dataToExport}
                   columns={["name"]}
-                  fileName="ActionTypes.xlsx"
-                  sheetName="Action Types"
+                  fileName="AgentTypes.xlsx"
+                  sheetName="Agent Types"
                 />
               </div>
             </div>

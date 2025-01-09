@@ -350,7 +350,7 @@ class StateComponent extends React.Component {
                 <ExcelDownloadButton
                   data={dataToExport}
                   columns={["countryName", "stateName"]}
-                  fileName="ActionTypes.xlsx"
+                  fileName="State.xlsx"
                   sheetName="Action Types"
                 />
               </div>

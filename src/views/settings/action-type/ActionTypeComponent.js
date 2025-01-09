@@ -321,7 +321,7 @@ class ActionTypeComponent extends React.Component {
 
                 <ExcelDownloadButton
                   data={dataToExport}
-                  columns={["name"]}
+                  columns={["Name"]}
                   fileName="ActionTypes.xlsx"
                   sheetName="Action Types"
                 />

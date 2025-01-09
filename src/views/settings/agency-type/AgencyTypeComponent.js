@@ -310,8 +310,8 @@ class AgencyTypeComponent extends React.Component {
                 </button>
 
                 <ExcelDownloadButton
-                  data={dataToExport}
-                  columns={["name"]}
+                  data={dataToExport} // Pass your data as usual
+                  columns={["name"]} // Ensure columns contains "Name" instead of "name"
                   fileName="AgencyTypes.xlsx"
                   sheetName="Agency Types"
                 />
