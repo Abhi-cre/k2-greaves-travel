@@ -74,6 +74,46 @@ class UserComponent extends React.Component {
         }
       }
 
+      let departmentNameListData = this.props.departmentNameListData;
+      console.log(departmentNameListData, "if--departmentNameListDatadepartmentNameListData");
+
+      if (departmentNameListData.length > 0) {
+        this.setState({ departmentList: departmentNameListData });
+      } else {
+        let typeResponse = await SettingApi.GetSettingList("/api/Department/List");
+        console.log(typeResponse, "else---typeResponse");
+
+        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+          const departmentId = ArrayHelper.getValue(typeResponse, "departmentId");
+          this.setState({
+            loader: false,
+            departmentList: departmentId, // Correct property for department dropdown
+          });
+          this.props.departmentNameListInfo(departmentId);
+        }
+
+      }
+
+      let userTypeListData = this.props.userTypeListData;
+      console.log(userTypeListData, "if--userTypeListDatauserTypeListData");
+
+      if (userTypeListData.length > 0) {
+        this.setState({ userTypeList: userTypeListData });
+      } else {
+        let typeResponse = await SettingApi.GetSettingList("/api/UserType/List");
+        console.log(typeResponse, "else---typeResponse");
+
+        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+          const userTypes = ArrayHelper.getValue(typeResponse, "userTypes");
+          this.setState({
+            loader: false,
+            userTypeList: userTypes, // Update here
+          });
+          this.props.userNameListInfo(userTypes); // Also update the redux state
+        }
+
+      }
+
       this.setState({
         loader: false,
         userListAll: userListData,
@@ -192,7 +232,7 @@ class UserComponent extends React.Component {
       item.display = true;
       if (
         item.fullName.search(new RegExp(this.state.fullName.trim(), "i")) ==
-          -1 &&
+        -1 &&
         this.state.fullName.trim() != ""
       ) {
         item.display = false;
@@ -425,16 +465,13 @@ class UserComponent extends React.Component {
                       onChange={this.handleChange}
                     >
                       <option value="">Select Department</option>
-                      {this.state.departmentList.map((item, key) => {
-                        return (
-                          <option
-                            key={`departmentList-${key}`}
-                            value={ArrayHelper.getValue(item, "id")}
-                          >
-                            {ArrayHelper.getValue(item, "name")}
+                      {Array.isArray(this.state.departmentList) &&
+                        this.state.departmentList.map((item, key) => (
+                          <option key={`departmentList-${key}`} value={item.id}>
+                            {item.name}
                           </option>
-                        );
-                      })}
+                        ))}
+
                     </select>
                   </div>
                   <div className="col-sm-2">
@@ -448,17 +485,15 @@ class UserComponent extends React.Component {
                       onChange={this.handleChange}
                     >
                       <option value="">User Type</option>
-                      {this.state.userTypeList.map((item, key) => {
-                        return (
-                          <option
-                            key={`userTypeList-${key}`}
-                            value={ArrayHelper.getValue(item, "id")}
-                          >
-                            {ArrayHelper.getValue(item, "name")}
+                      {Array.isArray(this.state.userTypeList) &&
+                        this.state.userTypeList.map((item, key) => (
+                          <option key={`userTypeList-${key}`} value={item.id}>
+                            {item.name}
                           </option>
-                        );
-                      })}
+                        ))}
+
                     </select>
+
                   </div>
 
                   <div className="col-sm-1 pt-4">

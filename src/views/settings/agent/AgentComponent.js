@@ -69,6 +69,44 @@ class AgentComponent extends React.Component {
         }
       }
 
+      let agencyNameListData = this.props.agencyNameListData;
+      console.log(agencyNameListData, "if--agencyNameListDataagencyNameListData");
+
+      if (agencyNameListData.length > 0) {
+        this.setState({ agencyList: agencyNameListData });
+      } else {
+        let typeResponse = await SettingApi.GetSettingList("/api/AgencyType/List");
+        console.log(typeResponse, "else---typeResponse");
+
+        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+          const agencyTypes = ArrayHelper.getValue(typeResponse, "agencyTypes");
+          this.setState({
+            loader: false,
+            agencyList: agencyTypes,
+          });
+          this.props.agencyNameList(agencyTypes);
+        }
+      }
+
+      let agencyTypeListData = this.props.agencyTypeListData;
+      console.log(agencyTypeListData, "if--agencyTypeListDataagencyTypeListData");
+
+      if (agencyTypeListData.length > 0) {
+        this.setState({ agentTypeList: agencyTypeListData });
+      } else {
+        let typeResponse = await SettingApi.GetSettingList("/api/AgencyType/List");
+        console.log(typeResponse, "else---typeResponse");
+
+        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+          const agencyTypesList2 = ArrayHelper.getValue(typeResponse, "agencyTypesList2");
+          this.setState({
+            loader: false,
+            agentTypeList: agencyTypesList2,
+          });
+          this.props.agencyTypeList(agencyTypesList2);
+        }
+      }
+
       this.setState({
         loader: false,
         agentListAll: agentListData,
@@ -205,7 +243,7 @@ class AgentComponent extends React.Component {
       item.display = true;
       if (
         item.fulllName.search(new RegExp(this.state.fulllName.trim(), "i")) ===
-          -1 &&
+        -1 &&
         this.state.fulllName.trim() !== ""
       ) {
         item.display = false;
@@ -368,16 +406,13 @@ class AgentComponent extends React.Component {
                       onChange={this.handleChange}
                     >
                       <option value="">Agency</option>
-                      {this.state.agencyList.map((item, key) => {
-                        return (
-                          <option
-                            key={`agencyList-${key}`}
-                            value={ArrayHelper.getValue(item, "id")}
-                          >
-                            {ArrayHelper.getValue(item, "name")}
+                      {Array.isArray(this.state.agencyList) &&
+                        this.state.agencyList.map((item, key) => (
+
+                          <option key={`agencyList-${key}`} value={item.id}>
+                            {item.name}
                           </option>
-                        );
-                      })}
+                        ))}
                     </select>
                   </div>
                   <div className="col-sm-2">
@@ -390,16 +425,12 @@ class AgentComponent extends React.Component {
                       onChange={this.handleChange}
                     >
                       <option value="">Agent Type</option>
-                      {this.state.agentTypeList.map((item, key) => {
-                        return (
-                          <option
-                            key={`agentTypeList-${key}`}
-                            value={ArrayHelper.getValue(item, "id")}
-                          >
-                            {ArrayHelper.getValue(item, "name")}
+                      {Array.isArray(this.state.agentTypeList) &&
+                        this.state.agentTypeList.map((item, key) => (
+                          <option key={`agentTypeList-${key}`} value={item.name}>
+                            {item.name}
                           </option>
-                        );
-                      })}
+                        ))}
                     </select>
                   </div>
                   <div className="col-sm-2">

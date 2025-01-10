@@ -28,6 +28,7 @@ class AgencyComponent extends React.Component {
       agencyTypeList: [],
       greavesOfficeList: [],
       salesRegionList: [],
+      saleRegionList: []
     };
   }
   componentDidMount() {
@@ -56,33 +57,97 @@ class AgencyComponent extends React.Component {
     this.setState({ loader: true });
     let response = await SettingApi.GetSettingList("/api/Agency/List");
 
-    if (ArrayHelper.getValue(response, "isSuccess") == true) {
+    if (ArrayHelper.getValue(response, "isSuccess") === true) {
       let agencyList = [];
+      const agencies = ArrayHelper.getValue(response, "agencies");
 
       for (let i = 0; i < this.state.perPage; i++) {
-        if (
-          ArrayHelper.getValue(
-            ArrayHelper.getValue(response, "agencies")[i],
-            "id"
-          ) != ""
-        ) {
-          agencyList.push(ArrayHelper.getValue(response, "agencies")[i]);
+        if (ArrayHelper.getValue(agencies[i], "id") !== "") {
+          agencyList.push(agencies[i]);
         }
       }
 
+      let agencyTypeListInfoData = this.props.agencyTypeListInfoData;
+      console.log(agencyTypeListInfoData, "if--agencyTypeListInfoDataagencyTypeListInfoData");
+
+      if (agencyTypeListInfoData.length > 0) {
+        this.setState({ agencyTypeList: agencyTypeListInfoData });
+      } else {
+        let typeResponse = await SettingApi.GetSettingList("/api/AgencyType/List");
+        console.log(typeResponse, "else---typeResponse");
+
+        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+          const agencyTypes = ArrayHelper.getValue(typeResponse, "agencyTypes");
+          this.setState({
+            loader: false,
+            agencyTypeList: agencyTypes,
+          });
+          this.props.agencyTypeListInfo(agencyTypes);
+        }
+      }
+
+      let greavesOfficeListData = this.props.greavesOfficeListData;
+      console.log(greavesOfficeListData, "if--greavesOfficeListDatagreavesOfficeListData");
+
+      if (greavesOfficeListData.length > 0) {
+        this.setState({ greavesOfficeList: greavesOfficeListData });
+      } else {
+        let typeResponse = await SettingApi.GetSettingList("/api/GreavesOffice/List");
+        console.log(typeResponse, "else---typeResponse");
+
+        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+          const greavesOffices = ArrayHelper.getValue(typeResponse, "greavesOffices") || []; // Extract greavesOffices
+          console.log(greavesOffices, "Extracted greavesOffices from API");
+          this.setState({
+            loader: false,
+            greavesOfficeList: greavesOffices, // Assign the extracted array to state
+          });
+          this.props.greavesOfficeList(greavesOffices); // Pass the data to the parent component if needed
+        }
+      }
+
+      //2
+
+      let saleRegionListData = this.props.saleRegionListData;
+      console.log(saleRegionListData, "if--saleRegionListDatasaleRegionListData");
+
+      if (saleRegionListData.length > 0) {
+        this.setState({ salesRegionList: saleRegionListData });
+      } else {
+        let typeResponse = await SettingApi.GetSettingList("/api/SalesRegion/List");
+        console.log(typeResponse, "else---typeResponse");
+
+        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+          const saleRegions = ArrayHelper.getValue(typeResponse, "salesRegions") || [];
+          console.log(saleRegions, "Extracted saleRegions from API");
+
+          this.setState({
+            loader: false,
+            salesRegionList: saleRegions,
+          });
+          this.props.saleRegionList(saleRegions);
+        }
+
+
+      }
+
+
+
       this.setState({
         loader: false,
-        agencyListAll: ArrayHelper.getValue(response, "agencies"),
-        agencyListFilter: ArrayHelper.getValue(response, "agencies"),
+        agencyListAll: agencies,
+        agencyListFilter: agencies,
         agencyList: agencyList,
       });
+
       setTimeout(() => {
-        this.props.agencyListInfo(ArrayHelper.getValue(response, "agencies"));
+        this.props.agencyListInfo(agencies);
       }, 10);
     } else {
       this.setState({ loader: false });
     }
   };
+
   componentWillReceiveProps(nextProps) {
     if (this.state.agencyListFilter.length > 0) {
       const location = nextProps.params;
@@ -291,6 +356,8 @@ class AgencyComponent extends React.Component {
 
     if (greavesOfficeListData.length > 0) {
       this.setState({ greavesOfficeList: greavesOfficeListData });
+      console.log(this.state.greavesOfficeList, "Current greavesOfficeList state");
+
     }
     this.setState({ loader: false });
   };
@@ -326,7 +393,7 @@ class AgencyComponent extends React.Component {
             <div className="row mb-3">
               <div className="col-md-2">
                 <br />
-                <h5 className="">Air Line</h5>
+                <h5 className="">Agency</h5>
               </div>
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">
@@ -354,15 +421,13 @@ class AgencyComponent extends React.Component {
                       <option value="">Agency Type</option>
                       {this.state.agencyTypeList.map((item, key) => {
                         return (
-                          <option
-                            key={`agencyTypeList-${key}`}
-                            value={ArrayHelper.getValue(item, "id")}
-                          >
-                            {ArrayHelper.getValue(item, "name")}
+                          <option key={`agencyTypeList-${key}`} value={item.id}>
+                            {item.name}
                           </option>
                         );
                       })}
                     </select>
+
                   </div>
                   <div className="col-sm-2">
                     <label>Greaves Office </label>
@@ -383,29 +448,18 @@ class AgencyComponent extends React.Component {
                       onChange={this.handleChange}
                     >
                       <option value="">Greaves Office</option>
-                      {this.state.greavesOfficeList.map((item, key) => {
-                        return (
-                          <option
-                            key={`greavesOfficeList-${key}`}
-                            value={ArrayHelper.getValue(item, "id")}
-                          >
-                            {ArrayHelper.getValue(item, "name")}
+                      {Array.isArray(this.state.greavesOfficeList) &&
+                        this.state.greavesOfficeList.map((item, key) => (
+
+                          <option key={`greavesOfficeList-${key}`} value={item.id}>
+                            {item.name}
                           </option>
-                        );
-                      })}
+                        ))}
                     </select>
+
                   </div>
                   <div className="col-sm-2">
                     <label>Sales Region </label>
-                    {/* <input
-                      type="text"
-                      name="salesRegionName"
-                      value={this.state.salesRegionName}
-                      onChange={this.handleChange}
-                      className="form-control"
-                      placeholder="Sales Region"
-                    /> */}
-
                     <select
                       required
                       className="form-select form-noradious"
@@ -414,16 +468,13 @@ class AgencyComponent extends React.Component {
                       onChange={this.handleChange}
                     >
                       <option value="">Sales Region</option>
-                      {this.state.salesRegionList.map((item, key) => {
-                        return (
-                          <option
-                            key={`salesRegionList-${key}`}
-                            value={ArrayHelper.getValue(item, "id")}
-                          >
-                            {ArrayHelper.getValue(item, "name")}
+                      {Array.isArray(this.state.salesRegionList) &&
+                        this.state.salesRegionList.map((item, key) => (
+                          <option key={`salesRegionList-${key}`} value={item.id}>
+                            {item.name}
                           </option>
-                        );
-                      })}
+                        ))}
+
                     </select>
                   </div>
 

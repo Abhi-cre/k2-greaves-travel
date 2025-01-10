@@ -45,8 +45,9 @@ class SalesGuideComponent extends React.Component {
       });
     } else {
       this.getSalesGuideList();
-      this.getsalesGuideList2();
+
     }
+    this.getsalesGuideList2();
   }
   getSalesGuideList = async () => {
     this.setState({ loader: true });
@@ -62,6 +63,25 @@ class SalesGuideComponent extends React.Component {
           ) != ""
         ) {
           salesGuideList.push(ArrayHelper.getValue(response, "salesGuides")[i]);
+        }
+      }
+
+      let saleCategoryListData = this.props.saleCategoryListData;
+      console.log(saleCategoryListData, "if--saleCategoryListDatasaleCategoryListData");
+
+      if (saleCategoryListData.length > 0) {
+        this.setState({ salesCategoryList: saleCategoryListData });
+      } else {
+        let typeResponse = await SettingApi.GetSettingList("/api/SalesCategory/List");
+        console.log(typeResponse, "else---typeResponse");
+
+        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+          const saleCatogory = ArrayHelper.getValue(typeResponse, "salesCategories"); // Correct key
+          this.setState({
+            loader: false,
+            salesCategoryList: saleCatogory, // Update the state with salesCategories
+          });
+          this.props.saleCategoryList(saleCatogory); // Update Redux state if needed
         }
       }
 
@@ -256,17 +276,24 @@ class SalesGuideComponent extends React.Component {
   };
 
   getsalesGuideList2 = async () => {
-    this.setState({ loader: true });
     let saleCategoryListData = this.props.saleCategoryListData;
-    console.log(
-      saleCategoryListData,
-      "saleCategoryListDatasaleCategoryListData"
-    );
+    console.log(saleCategoryListData, "if--saleCategoryListDatasaleCategoryListData");
 
     if (saleCategoryListData.length > 0) {
       this.setState({ salesCategoryList: saleCategoryListData });
+    } else {
+      let typeResponse = await SettingApi.GetSettingList("/api/SalesCategory/List");
+      console.log(typeResponse, "else---typeResponse");
+
+      if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
+        const saleCatogory = ArrayHelper.getValue(typeResponse, "salesCategories"); // Correct key
+        this.setState({
+          loader: false,
+          salesCategoryList: saleCatogory, // Update the state with salesCategories
+        });
+        this.props.saleCategoryList(saleCatogory); // Update Redux state if needed
+      }
     }
-    this.setState({ loader: false });
   };
 
   handleClick = () => {
@@ -301,15 +328,6 @@ class SalesGuideComponent extends React.Component {
                 <div className="row g-3 align-items-center">
                   <div className="col-sm-3">
                     <label>Name </label>
-                    {/* <input
-                      type="text"
-                      name="name"
-                      value={this.state.name}
-                      onChange={this.handleChange}
-                      className="form-control"
-                      placeholder="Name"
-                    /> */}
-
                     <input
                       type="text"
                       name="name"
@@ -337,17 +355,15 @@ class SalesGuideComponent extends React.Component {
                       onChange={this.handleChange}
                     >
                       <option value="">Select Department</option>
-                      {this.state.salesCategoryList.map((item, key) => {
-                        return (
-                          <option
-                            key={`salesCategoryList-${key}`}
-                            value={ArrayHelper.getValue(item, "id")}
-                          >
-                            {ArrayHelper.getValue(item, "name")}
+                      {Array.isArray(this.state.salesCategoryList) &&
+                        this.state.salesCategoryList.map((item, key) => (
+                          <option key={`salesCategoryList-${key}`} value={item.name}>
+                            {item.name}
                           </option>
-                        );
-                      })}
+                        ))}
                     </select>
+
+
                   </div>
 
                   <div className="col-sm-1 pt-4">

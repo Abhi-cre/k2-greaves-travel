@@ -225,14 +225,14 @@ class VendorComponent extends React.Component {
       item.display = true;
       if (
         item.vendorName.search(new RegExp(this.state.vendorName.trim(), "i")) ==
-          -1 &&
+        -1 &&
         this.state.vendorName.trim() != ""
       ) {
         item.display = false;
       }
       if (
         item.stateName.search(new RegExp(this.state.stateName.trim(), "i")) ==
-          -1 &&
+        -1 &&
         this.state.stateName.trim() != ""
       ) {
         console.log("state");
@@ -240,7 +240,7 @@ class VendorComponent extends React.Component {
       }
       if (
         item.cityName.search(new RegExp(this.state.cityName.trim(), "i")) ==
-          -1 &&
+        -1 &&
         this.state.cityName.trim() != ""
       ) {
         item.display = false;
@@ -343,7 +343,7 @@ class VendorComponent extends React.Component {
             <div className="row mb-3">
               <div className="col-md-2">
                 <br />
-                <h5 className="">Vendor</h5>
+                <h5 className="">Vendorxxx</h5>
               </div>
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">
@@ -382,15 +382,6 @@ class VendorComponent extends React.Component {
                   </div>
                   <div className="col-sm-2">
                     <label>Country Name </label>
-                    {/* <input
-                      type="text"
-                      name="countryName"
-                      placeholder="Country Name"
-                      value={this.state.countryName}
-                      onChange={this.handleChange}
-                      className="form-control"
-                    /> */}
-
                     <input
                       type="text"
                       name="countryName"
@@ -408,15 +399,6 @@ class VendorComponent extends React.Component {
                   </div>
                   <div className="col-sm-2">
                     <label>State Name </label>
-                    {/* <input
-                      type="text"
-                      name="stateName"
-                      placeholder="State Name"
-                      value={this.state.stateName}
-                      onChange={this.handleChange}
-                      className="form-control"
-                    /> */}
-
                     <input
                       type="text"
                       name="stateName"
@@ -434,15 +416,6 @@ class VendorComponent extends React.Component {
                   </div>
                   <div className="col-sm-2">
                     <label>City Name </label>
-                    {/* <input
-                      type="text"
-                      name="cityName"
-                      placeholder="City Name"
-                      value={this.state.cityName}
-                      onChange={this.handleChange}
-                      className="form-control"
-                    /> */}
-
                     <input
                       type="text"
                       name="cityName"
