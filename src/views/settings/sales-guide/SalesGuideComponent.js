@@ -386,57 +386,50 @@ class SalesGuideComponent extends React.Component {
                   </div>
                 </div>
               </div>
-              {/* <div className="col-md-2 text-end">
-                    <br/>
-                    <a  onClick={()=>this.reloadWindow()}><img style={{'height': '40px'}} src="/images/reload.png"/></a>  
-                          <button data-bs-toggle="modal" data-bs-target="#salesGuideAdd" className="btn btn-outlined"> <i className="fa-sharp fa-solid fa-plus"></i> Add</button>
-                    </div>
-                    <div className="d-flex justify-content-start mb-3">
-    <button onClick={this.downloadExcel} type="button" className="btn btn-outlined ms-2">
-        <i className="fa-sharp fa-solid fa-download"></i> Download Excel
-    </button>
-</div> */}
 
-              <div className="d-flex align-items-center justify-content-end">
-                <a onClick={() => this.reloadWindow()}>
-                  <img
-                    style={{ height: "30px", marginRight: "20px" }}
-                    src="/images/reload.png"
-                  />
-                </a>
-                <button
-                  data-bs-toggle="modal"
-                  data-bs-target="#salesGuideAdd"
-                  className="btn btn-outlined me-1"
-                  style={{ marginRight: "20px" }}
-                >
-                  <img
-                    src="/images/add.png"
-                    alt="Add"
-                    style={{ height: "40px", width: "40px" }}
-                  />
-                </button>
-                {/* <button onClick={this.downloadExcel} type="button" className="btn btn-outlined ms-1">
-                    <i className="fa-sharp fa-solid fa-download"></i> Download Excel
-                  </button> */}
+              <div className="col-md-2 text-end">
+                <br />
+                <div className="d-flex align-items-center justify-content-end">
+                  <a onClick={() => this.reloadWindow()}>
+                    <img
+                      style={{ height: "20px", marginRight: "20px" }}
+                      src="/images/reload.png"
+                    />
+                  </a>
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#salesGuideAdd"
+                    className=""
+                    style={{ marginRight: "20px" }}
+                  >
+                    <img
+                      src="/images/add.png"
+                      alt="Add"
+                      style={{ height: "20px", width: "20px" }}
+                    />
+                  </button>
 
-                <ExcelDownloadButton
-                  data={dataToExport}
-                  columns={[
-                    "name",
-                    "salesCategoryName",
-                    "rating",
-                    "position",
-                    "webReference",
-                    "city",
-                    "state",
-                    "region",
-                    "countryName",
-                  ]}
-                  fileName="ActionTypes.xlsx"
-                  sheetName="Action Types"
-                />
+
+                  <ExcelDownloadButton
+                    data={dataToExport}
+                    columns={[
+                      "name",
+                      "salesCategoryName",
+                      "rating",
+                      "position",
+                      "webReference",
+                      "city",
+                      "state",
+                      "region",
+                      "countryName",
+                    ]}
+                    fileName="ActionTypes.xlsx"
+                    sheetName="Action Types"
+                  />
+                </div>
               </div>
+
+
             </div>
 
             <div className="borderless-box">

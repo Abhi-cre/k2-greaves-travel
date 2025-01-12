@@ -521,7 +521,7 @@ class UserComponent extends React.Component {
                 <div className="d-flex align-items-center justify-content-end">
                   <a onClick={() => this.reloadWindow()}>
                     <img
-                      style={{ height: "30px", marginRight: "20px" }}
+                      style={{ height: "20px", marginRight: "20px" }}
                       src="/images/reload.png"
                     />
                   </a>
@@ -534,14 +534,14 @@ class UserComponent extends React.Component {
                     <img
                       src="/images/add.png"
                       alt="Add"
-                      style={{ height: "40px", width: "40px" }}
+                      style={{ height: "20px", width: "20px" }}
                     />
                   </button>
                   <div>
                     <img
                       style={{
-                        height: "40px",
-                        width: "40px",
+                        height: "30px",
+                        width: "30px",
                         cursor: "pointer",
                       }}
                       src="/images/downloadExcel.png"

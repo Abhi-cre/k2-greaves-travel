@@ -238,21 +238,21 @@ class CityComponent extends React.Component {
       let cityListFilter = cityListAll.filter((item) => {
         if (
           item.cityName.search(new RegExp(this.state.keyword.trim(), "i")) !=
-            -1 &&
+          -1 &&
           this.state.keyword.trim() != ""
         ) {
           return item;
         }
         if (
           item.stateName.search(new RegExp(this.state.keyword.trim(), "i")) !=
-            -1 &&
+          -1 &&
           this.state.keyword.trim() != ""
         ) {
           return item;
         }
         if (
           item.countryName.search(new RegExp(this.state.keyword.trim(), "i")) !=
-            -1 &&
+          -1 &&
           this.state.keyword.trim() != ""
         ) {
           return item;
@@ -339,32 +339,37 @@ class CityComponent extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="d-flex align-items-center justify-content-end">
-                <a onClick={() => this.reloadWindow()}>
-                  <img
-                    style={{ height: "30px", marginRight: "20px" }}
-                    src="/images/reload.png"
+              <div className="col-md-2 text-end">
+                <br />
+                <div className="d-flex align-items-center justify-content-end">
+                  <a onClick={() => this.reloadWindow()}>
+                    <img
+                      style={{ height: "20px", marginRight: "20px" }}
+                      src="/images/reload.png"
+                    />
+                  </a>
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#cityAdd"
+                    className=""
+                    style={{ marginRight: "20px" }}
+                  >
+                    <img
+                      src="/images/add.png"
+                      alt="Add"
+                      style={{ height: "20px", width: "20px" }}
+                    />
+                  </button>
+                  <ExcelDownloadButton
+                    data={dataToExport}
+                    columns={["countryName", "stateName", "cityName"]}
+                    fileName="City.xlsx"
+                    sheetName="Action Types"
                   />
-                </a>
-                <button
-                  data-bs-toggle="modal"
-                  data-bs-target="#cityAdd"
-                  className=""
-                  style={{ marginRight: "20px" }}
-                >
-                  <img
-                    src="/images/add.png"
-                    alt="Add"
-                    style={{ height: "40px", width: "40px" }}
-                  />
-                </button>
-                <ExcelDownloadButton
-                  data={dataToExport}
-                  columns={["countryName", "stateName", "cityName"]}
-                  fileName="City.xlsx"
-                  sheetName="Action Types"
-                />
+                </div>
               </div>
+
+
             </div>
 
             <div className="borderless-box">

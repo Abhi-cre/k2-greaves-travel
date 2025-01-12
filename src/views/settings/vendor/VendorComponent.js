@@ -451,46 +451,53 @@ class VendorComponent extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="d-flex align-items-center justify-content-end">
-                <a onClick={() => this.reloadWindow()}>
-                  <img
-                    style={{ height: "30px", marginRight: "20px" }}
-                    src="/images/reload.png"
-                  />
-                </a>
-                <button
-                  data-bs-toggle="modal"
-                  data-bs-target="#vendorAdd"
-                  className=""
-                  style={{ marginRight: "20px" }}
-                >
-                  <img
-                    src="/images/add.png"
-                    alt="Add"
-                    style={{ height: "40px", width: "40px" }}
-                  />
-                </button>
-                {/* <button onClick={this.downloadExcel} type="button" className="btn btn-outlined ms-1">
+
+              <div className="col-md-2 text-end">
+                <br />
+                <div className="d-flex align-items-center justify-content-end">
+                  <a onClick={() => this.reloadWindow()}>
+                    <img
+                      style={{ height: "20px", marginRight: "20px" }}
+                      src="/images/reload.png"
+                    />
+                  </a>
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#vendorAdd"
+                    className=""
+                    style={{ marginRight: "20px" }}
+                  >
+                    <img
+                      src="/images/add.png"
+                      alt="Add"
+                      style={{ height: "20px", width: "20px" }}
+                    />
+                  </button>
+                  {/* <button onClick={this.downloadExcel} type="button" className="btn btn-outlined ms-1">
                     <i className="fa-sharp fa-solid fa-download"></i> Download Excel
                   </button> */}
 
-                <ExcelDownloadButton
-                  data={dataToExport}
-                  columns={[
-                    "vendorName",
-                    "vendorTypeName",
-                    "countryName",
-                    "stateName",
-                    "cityName",
-                    "email",
-                    "primaryContactNo",
-                    "address",
-                    "zip",
-                  ]}
-                  fileName="ActionTypes.xlsx"
-                  sheetName="Action Types"
-                />
+                  <ExcelDownloadButton
+                    data={dataToExport}
+                    columns={[
+                      "vendorName",
+                      "vendorTypeName",
+                      "countryName",
+                      "stateName",
+                      "cityName",
+                      "email",
+                      "primaryContactNo",
+                      "address",
+                      "zip",
+                    ]}
+                    fileName="ActionTypes.xlsx"
+                    sheetName="Action Types"
+                  />
+                </div>
+
               </div>
+
+
             </div>
 
             <div className="borderless-box">

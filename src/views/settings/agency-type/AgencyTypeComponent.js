@@ -289,33 +289,38 @@ class AgencyTypeComponent extends React.Component {
                 </div>
               </div>
 
-              <div className="d-flex align-items-center justify-content-end">
-                <a onClick={() => this.reloadWindow()} style={{}}>
-                  <img
-                    style={{ height: "30px", marginRight: "20px" }}
-                    src="/images/reload.png"
-                  />
-                </a>
-                <button
-                  data-bs-toggle="modal"
-                  data-bs-target="#agencyTypeAdd"
-                  className=""
-                  style={{ marginRight: "20px" }}
-                >
-                  <img
-                    src="/images/add.png"
-                    alt="Add"
-                    style={{ height: "40px", width: "40px" }}
-                  />
-                </button>
+              <div className="col-md-2 text-end">
+                <br />
+                <div className="d-flex align-items-center justify-content-end">
+                  <a onClick={() => this.reloadWindow()} style={{}}>
+                    <img
+                      style={{ height: "20px", marginRight: "20px" }}
+                      src="/images/reload.png"
+                    />
+                  </a>
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#agencyTypeAdd"
+                    className=""
+                    style={{ marginRight: "20px" }}
+                  >
+                    <img
+                      src="/images/add.png"
+                      alt="Add"
+                      style={{ height: "20px", width: "20px" }}
+                    />
+                  </button>
 
-                <ExcelDownloadButton
-                  data={dataToExport} // Pass your data as usual
-                  columns={["name"]} // Ensure columns contains "Name" instead of "name"
-                  fileName="AgencyTypes.xlsx"
-                  sheetName="Agency Types"
-                />
+                  <ExcelDownloadButton
+                    data={dataToExport} // Pass your data as usual
+                    columns={["name"]} // Ensure columns contains "Name" instead of "name"
+                    fileName="AgencyTypes.xlsx"
+                    sheetName="Agency Types"
+                  />
+                </div>
               </div>
+
+
             </div>
 
             <div className="borderless-box">

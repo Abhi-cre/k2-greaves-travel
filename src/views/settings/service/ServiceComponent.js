@@ -259,7 +259,7 @@ class ServiceComponent extends React.Component {
       }
       if (
         item.vendorName.search(new RegExp(this.state.vendorName.trim(), "i")) ==
-          -1 &&
+        -1 &&
         this.state.vendorName.trim() != ""
       ) {
         item.display = false;
@@ -542,38 +542,39 @@ class ServiceComponent extends React.Component {
                 </div>
               </div>
 
-              <div className="d-flex align-items-center justify-content-end">
-                <a onClick={() => this.reloadWindow()}>
+              <div className="col-md-2 text-end">
+                <br />
+                <div className="d-flex align-items-center justify-content-end">
+                  <a onClick={() => this.reloadWindow()}>
+                    <img
+                      style={{ height: "20px", marginRight: "20px" }}
+                      src="/images/reload.png"
+                    />
+                  </a>
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#serviceAdd"
+                    className=""
+                    style={{ marginRight: "20px" }}
+                  >
+                    <img
+                      src="/images/add.png"
+                      alt="Add"
+                      style={{ height: "20px", width: "20px" }}
+                    />
+                  </button>
+
                   <img
-                    style={{ height: "30px", marginRight: "20px" }}
-                    src="/images/reload.png"
-                  />
-                </a>
-                <button
-                  data-bs-toggle="modal"
-                  data-bs-target="#serviceAdd"
-                  className=""
-                  style={{ marginRight: "20px" }}
-                >
-                  <img
-                    src="/images/add.png"
-                    alt="Add"
-                    style={{ height: "40px", width: "40px" }}
-                  />
-                </button>
-                <button
-                  onClick={this.downloadExcel}
-                  type="button"
-                  className="btn btn-outlined ms-1"
-                >
-                  <img
-                    style={{ height: "40px", width: "40px", cursor: "pointer" }}
+                    style={{ height: "30px", width: "30px", cursor: "pointer" }}
                     src="/images/downloadExcel.png"
                     alt="Download Excel"
                     onClick={this.downloadExcel}
                   />
-                </button>
+
+                </div>
               </div>
+
+
             </div>
 
             <div className="borderless-box">

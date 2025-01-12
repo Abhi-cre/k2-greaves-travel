@@ -252,7 +252,7 @@ class ActionTypeComponent extends React.Component {
               </div>
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">
-                  <div className="col-sm-3">
+                  <div className="col-sm-2">
                     <label>Search </label>
                     {/* <input
                       type="text"
@@ -299,33 +299,37 @@ class ActionTypeComponent extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="d-flex align-items-center justify-content-end">
-                <a onClick={() => this.reloadWindow()}>
-                  <img
-                    style={{ height: "30px", marginRight: "20px" }}
-                    src="/images/reload.png"
-                  />
-                </a>
-                <button
-                  data-bs-toggle=""
-                  data-bs-target="#actionTypeAdd"
-                  className=""
-                  style={{ marginRight: "20px" }}
-                >
-                  <img
-                    src="/images/add.png"
-                    alt="Add"
-                    style={{ height: "40px", width: "40px" }}
-                  />
-                </button>
+              <div className="col-md-2 text-end">
+                <br />
+                <div className="d-flex align-items-center justify-content-end">
+                  <a onClick={() => this.reloadWindow()}>
+                    <img
+                      style={{ height: "20px", marginRight: "20px" }}
+                      src="/images/reload.png"
+                    />
+                  </a>
+                  <button
+                    data-bs-toggle=""
+                    data-bs-target="#actionTypeAdd"
+                    className=""
+                    style={{ marginRight: "20px" }}
+                  >
+                    <img
+                      src="/images/add.png"
+                      alt="Add"
+                      style={{ height: "20px", width: "20px" }}
+                    />
+                  </button>
 
-                <ExcelDownloadButton
-                  data={dataToExport}
-                  columns={["Name"]}
-                  fileName="ActionTypes.xlsx"
-                  sheetName="Action Types"
-                />
+                  <ExcelDownloadButton
+                    data={dataToExport}
+                    columns={["Name"]}
+                    fileName="ActionTypes.xlsx"
+                    sheetName="Action Types"
+                  />
+                </div>
               </div>
+
             </div>
             {/* <div className="w-100 d-sm-inline-flex align-items-center justify-content-start">
                             <div className="w-25 py-2">
