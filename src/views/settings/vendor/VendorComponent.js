@@ -356,7 +356,7 @@ class VendorComponent extends React.Component {
             <div className="row mb-3">
               <div className="col-md-2">
                 <br />
-                <h5 className="">Vendorxxx</h5>
+                <h5 className="">Vendor</h5>
               </div>
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">

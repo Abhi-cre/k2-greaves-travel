@@ -429,7 +429,7 @@ class AgentComponent extends React.Component {
                       value={this.state.agencyName}
                       onChange={this.handleChange}
                       className="form-control"
-                      placeholder="Agency Name"
+                      placeholder="Agency"
                       list="agencyNameSuggestions"
                     />
                     <datalist id="agencyNameSuggestions">

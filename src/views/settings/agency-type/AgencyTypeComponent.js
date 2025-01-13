@@ -237,7 +237,7 @@ class AgencyTypeComponent extends React.Component {
             <div className="row mb-3">
               <div className="col-md-2">
                 <br />
-                <h5 className="">Agency Type 11</h5>
+                <h5 className="">Agency Type</h5>
               </div>
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">
@@ -319,8 +319,6 @@ class AgencyTypeComponent extends React.Component {
                   />
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">
