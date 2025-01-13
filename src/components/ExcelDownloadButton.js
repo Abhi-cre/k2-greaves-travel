@@ -130,7 +130,7 @@ class ExcelDownloadButton extends React.Component {
     return (
       <div>
         <img
-          style={{ height: "30px", width: "30px", cursor: "pointer" }}
+          style={{ height: "25px", width: "25px", cursor: "pointer" }}
           src="/images/downloadExcel.png"
           alt="Download Excel"
           onClick={this.downloadExcel}

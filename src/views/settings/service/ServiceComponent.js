@@ -38,6 +38,7 @@ class ServiceComponent extends React.Component {
       startDate: "",
       endDate: "",
       filteredNames: [],
+      filteredVendor: [],
     };
   }
   componentDidMount() {
@@ -90,6 +91,11 @@ class ServiceComponent extends React.Component {
     } else {
       this.setState({ loader: true });
       let response = await SettingApi.GetSettingList("/api/VendorType/List");
+      console.log(
+        response,
+        "vendorTypeListDatavendorTypeListDatavendorTypeListData"
+      );
+
       if (ArrayHelper.getValue(response, "isSuccess") == true) {
         this.setState({
           loader: false,
@@ -106,6 +112,8 @@ class ServiceComponent extends React.Component {
     } else {
       this.setState({ loader: true });
       let response = await SettingApi.GetSettingList("/api/Vendor/List");
+      console.log(response, "Vendor/ListVendor/ListVendor/List");
+
       if (ArrayHelper.getValue(response, "isSuccess") == true) {
         this.setState({
           loader: false,
@@ -259,7 +267,7 @@ class ServiceComponent extends React.Component {
       }
       if (
         item.vendorName.search(new RegExp(this.state.vendorName.trim(), "i")) ==
-        -1 &&
+          -1 &&
         this.state.vendorName.trim() != ""
       ) {
         item.display = false;
@@ -304,29 +312,30 @@ class ServiceComponent extends React.Component {
       this.props.history("/settings/service");
     }, 10);
   }
-  handleChange = (e) => {
-    const name = e.target.name;
-    let value = e.target.value;
-    if (name === "vendorName") {
-      const filteredNames = this.state.serviceListFilter
-        .map((user) => user.vendorName)
-        .filter((vendorName) =>
-          vendorName.toLowerCase().includes(value.toLowerCase())
-        );
 
-      this.setState({ vendorName: value, filteredNames: filteredNames });
-    }
+  handleChange = (e) => {
+    const { name, value } = e.target;
 
     if (name === "name") {
       const filteredNames = this.state.serviceListFilter
         .map((user) => user.name)
-        .filter((name) => name.toLowerCase().includes(value.toLowerCase()));
+        .filter((name) => name.toLowerCase().includes(value.toLowerCase()))
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-      this.setState({ name: value, filteredNames: filteredNames });
+      this.setState({ name: value, filteredNames });
+    } else if (name === "vendorName") {
+      const filteredVendor = this.state.serviceListFilter
+        .map((user) => user.vendorName)
+        .filter((vendorName) =>
+          vendorName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ vendorName: value, filteredVendor });
     } else {
+      // For other fields, just update the state
       this.setState({ [name]: value });
     }
-    // this.setState({ ...this.state, [name]: value });
   };
 
   downloadExcel = () => {
@@ -504,10 +513,10 @@ class ServiceComponent extends React.Component {
                       onChange={this.handleChange}
                       className="form-control"
                       placeholder="Vendor Name"
-                      list="nameSuggestions"
+                      list="vendorNameSuggestions"
                     />
-                    <datalist id="nameSuggestions">
-                      {this.state.filteredNames.map((name, index) => (
+                    <datalist id="vendorNameSuggestions">
+                      {this.state.filteredVendor.map((name, index) => (
                         <option key={index} value={name} />
                       ))}
                     </datalist>
@@ -565,16 +574,13 @@ class ServiceComponent extends React.Component {
                   </button>
 
                   <img
-                    style={{ height: "30px", width: "30px", cursor: "pointer" }}
+                    style={{ height: "25px", width: "25px", cursor: "pointer" }}
                     src="/images/downloadExcel.png"
                     alt="Download Excel"
                     onClick={this.downloadExcel}
                   />
-
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">

@@ -29,6 +29,9 @@ class VendorComponent extends React.Component {
       countryName: "",
       countryList: [],
       filteredNames: [],
+      filteredCountries: [],
+      filteredStates: [],
+      filteredCities: [],
     };
   }
   componentDidMount() {
@@ -225,14 +228,14 @@ class VendorComponent extends React.Component {
       item.display = true;
       if (
         item.vendorName.search(new RegExp(this.state.vendorName.trim(), "i")) ==
-        -1 &&
+          -1 &&
         this.state.vendorName.trim() != ""
       ) {
         item.display = false;
       }
       if (
         item.stateName.search(new RegExp(this.state.stateName.trim(), "i")) ==
-        -1 &&
+          -1 &&
         this.state.stateName.trim() != ""
       ) {
         console.log("state");
@@ -240,7 +243,7 @@ class VendorComponent extends React.Component {
       }
       if (
         item.cityName.search(new RegExp(this.state.cityName.trim(), "i")) ==
-        -1 &&
+          -1 &&
         this.state.cityName.trim() != ""
       ) {
         item.display = false;
@@ -279,6 +282,7 @@ class VendorComponent extends React.Component {
       loader: true,
       vendorName: "",
       vendorTypeId: "",
+      countryName: "",
       stateName: "",
       cityName: "",
       currentPage: 1,
@@ -290,38 +294,47 @@ class VendorComponent extends React.Component {
     }, 10);
   }
   handleChange = (e) => {
-    const name = e.target.name;
-    let value = e.target.value;
+    const { name, value } = e.target;
+
     if (name === "countryName") {
-      const filteredNames = this.state.vendorListFilter
+      const filteredCountries = this.state.vendorListFilter
         .map((user) => user.countryName)
         .filter((countryName) =>
           countryName.toLowerCase().includes(value.toLowerCase())
-        );
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-      this.setState({ countryName: value, filteredNames: filteredNames });
-    } else {
-      this.setState({ [name]: value });
-    }
-
-    if (name === "stateName") {
-      const filteredNames = this.state.vendorListFilter
+      this.setState({ countryName: value, filteredCountries });
+    } else if (name === "stateName") {
+      const filteredStates = this.state.vendorListFilter
         .map((user) => user.stateName)
         .filter((stateName) =>
           stateName.toLowerCase().includes(value.toLowerCase())
-        );
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-      this.setState({ stateName: value, filteredNames: filteredNames });
-    }
-
-    if (name === "cityName") {
-      const filteredNames = this.state.vendorListFilter
+      this.setState({ stateName: value, filteredStates });
+    } else if (name === "cityName") {
+      const filteredCities = this.state.vendorListFilter
         .map((user) => user.cityName)
         .filter((cityName) =>
           cityName.toLowerCase().includes(value.toLowerCase())
-        );
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-      this.setState({ cityName: value, filteredNames: filteredNames });
+      this.setState({ cityName: value, filteredCities });
+    } else if (name === "vendorName") {
+      const filteredNames = this.state.vendorListFilter
+        .map((user) => user.vendorName)
+        .filter((vendorName) =>
+          vendorName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ vendorName: value, filteredNames });
+    } else {
+      // For other fields, just update the state
+      this.setState({ [name]: value });
     }
   };
 
@@ -356,7 +369,13 @@ class VendorComponent extends React.Component {
                       value={this.state.vendorName}
                       onChange={this.handleChange}
                       className="form-control"
+                      list="nameSuggestions"
                     />
+                    <datalist id="nameSuggestions">
+                      {this.state.filteredNames.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
                   </div>
                   <div className="col-sm-2">
                     <label>Vendor Type </label>
@@ -381,7 +400,7 @@ class VendorComponent extends React.Component {
                     </select>
                   </div>
                   <div className="col-sm-2">
-                    <label>Country Name </label>
+                    <label>Country Name</label>
                     <input
                       type="text"
                       name="countryName"
@@ -389,16 +408,17 @@ class VendorComponent extends React.Component {
                       onChange={this.handleChange}
                       className="form-control"
                       placeholder="Country Name"
-                      list="nameSuggestions"
+                      list="countrySuggestions"
                     />
-                    <datalist id="nameSuggestions">
-                      {this.state.filteredNames.map((name, index) => (
+                    <datalist id="countrySuggestions">
+                      {this.state.filteredCountries.map((name, index) => (
                         <option key={index} value={name} />
                       ))}
                     </datalist>
                   </div>
+
                   <div className="col-sm-2">
-                    <label>State Name </label>
+                    <label>State Name</label>
                     <input
                       type="text"
                       name="stateName"
@@ -406,31 +426,33 @@ class VendorComponent extends React.Component {
                       onChange={this.handleChange}
                       className="form-control"
                       placeholder="State Name"
-                      list="nameSuggestions"
+                      list="stateSuggestions"
                     />
-                    <datalist id="nameSuggestions">
-                      {this.state.filteredNames.map((name, index) => (
+                    <datalist id="stateSuggestions">
+                      {this.state.filteredStates.map((name, index) => (
                         <option key={index} value={name} />
                       ))}
                     </datalist>
                   </div>
+
                   <div className="col-sm-2">
-                    <label>City Name </label>
+                    <label>City Name</label>
                     <input
                       type="text"
                       name="cityName"
                       value={this.state.cityName}
                       onChange={this.handleChange}
                       className="form-control"
-                      placeholder="State Name"
-                      list="nameSuggestions"
+                      placeholder="City Name"
+                      list="citySuggestions"
                     />
-                    <datalist id="nameSuggestions">
-                      {this.state.filteredNames.map((name, index) => (
+                    <datalist id="citySuggestions">
+                      {this.state.filteredCities.map((name, index) => (
                         <option key={index} value={name} />
                       ))}
                     </datalist>
                   </div>
+
                   <div className="col-sm-1 pt-4">
                     <button
                       onClick={() => this.filterData()}
@@ -473,9 +495,6 @@ class VendorComponent extends React.Component {
                       style={{ height: "20px", width: "20px" }}
                     />
                   </button>
-                  {/* <button onClick={this.downloadExcel} type="button" className="btn btn-outlined ms-1">
-                    <i className="fa-sharp fa-solid fa-download"></i> Download Excel
-                  </button> */}
 
                   <ExcelDownloadButton
                     data={dataToExport}
@@ -494,10 +513,7 @@ class VendorComponent extends React.Component {
                     sheetName="Action Types"
                   />
                 </div>
-
               </div>
-
-
             </div>
 
             <div className="borderless-box">

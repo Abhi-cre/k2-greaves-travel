@@ -75,23 +75,30 @@ class UserComponent extends React.Component {
       }
 
       let departmentNameListData = this.props.departmentNameListData;
-      console.log(departmentNameListData, "if--departmentNameListDatadepartmentNameListData");
+      console.log(
+        departmentNameListData,
+        "if--departmentNameListDatadepartmentNameListData"
+      );
 
       if (departmentNameListData.length > 0) {
         this.setState({ departmentList: departmentNameListData });
       } else {
-        let typeResponse = await SettingApi.GetSettingList("/api/Department/List");
+        let typeResponse = await SettingApi.GetSettingList(
+          "/api/Department/List"
+        );
         console.log(typeResponse, "else---typeResponse");
 
         if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
-          const departmentId = ArrayHelper.getValue(typeResponse, "departmentId");
+          const departmentId = ArrayHelper.getValue(
+            typeResponse,
+            "departmentId"
+          );
           this.setState({
             loader: false,
             departmentList: departmentId, // Correct property for department dropdown
           });
           this.props.departmentNameListInfo(departmentId);
         }
-
       }
 
       let userTypeListData = this.props.userTypeListData;
@@ -100,7 +107,9 @@ class UserComponent extends React.Component {
       if (userTypeListData.length > 0) {
         this.setState({ userTypeList: userTypeListData });
       } else {
-        let typeResponse = await SettingApi.GetSettingList("/api/UserType/List");
+        let typeResponse = await SettingApi.GetSettingList(
+          "/api/UserType/List"
+        );
         console.log(typeResponse, "else---typeResponse");
 
         if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
@@ -111,7 +120,6 @@ class UserComponent extends React.Component {
           });
           this.props.userNameListInfo(userTypes); // Also update the redux state
         }
-
       }
 
       this.setState({
@@ -232,7 +240,7 @@ class UserComponent extends React.Component {
       item.display = true;
       if (
         item.fullName.search(new RegExp(this.state.fullName.trim(), "i")) ==
-        -1 &&
+          -1 &&
         this.state.fullName.trim() != ""
       ) {
         item.display = false;
@@ -328,12 +336,6 @@ class UserComponent extends React.Component {
     } else {
       this.setState({ [name]: value });
     }
-  };
-
-  handleClick = () => {
-    console.log("-=-=-");
-
-    this.getUsertype();
   };
 
   downloadExcel = () => {
@@ -471,7 +473,6 @@ class UserComponent extends React.Component {
                             {item.name}
                           </option>
                         ))}
-
                     </select>
                   </div>
                   <div className="col-sm-2">
@@ -491,9 +492,7 @@ class UserComponent extends React.Component {
                             {item.name}
                           </option>
                         ))}
-
                     </select>
-
                   </div>
 
                   <div className="col-sm-1 pt-4">
@@ -540,8 +539,8 @@ class UserComponent extends React.Component {
                   <div>
                     <img
                       style={{
-                        height: "30px",
-                        width: "30px",
+                        height: "25px",
+                        width: "25px",
                         cursor: "pointer",
                       }}
                       src="/images/downloadExcel.png"

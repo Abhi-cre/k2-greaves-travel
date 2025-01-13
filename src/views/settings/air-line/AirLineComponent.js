@@ -23,6 +23,7 @@ class AirLineComponent extends React.Component {
       code: "",
       name: "",
       filteredNames: [],
+      filteredCodes: [],
     };
   }
   componentDidMount() {
@@ -222,24 +223,22 @@ class AirLineComponent extends React.Component {
     }, 10);
   }
   handleChange = (e) => {
-    const name = e.target.name;
-    let value = e.target.value;
+    const { name, value } = e.target;
+
     if (name === "name") {
       const filteredNames = this.state.airLineListFilter
         .map((user) => user.name)
-        .filter((name) => name.toLowerCase().includes(value.toLowerCase()));
+        .filter((name) => name.toLowerCase().includes(value.toLowerCase()))
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-      this.setState({ name: value, filteredNames: filteredNames });
-    } else {
-      this.setState({ [name]: value });
-    }
-
-    if (name === "code") {
-      const filteredNames = this.state.airLineListFilter
+      this.setState({ name: value, filteredNames });
+    } else if (name === "code") {
+      const filteredCodes = this.state.airLineListFilter
         .map((user) => user.code)
-        .filter((code) => code.toLowerCase().includes(value.toLowerCase()));
+        .filter((code) => code.toLowerCase().includes(value.toLowerCase()))
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-      this.setState({ code: value, filteredNames: filteredNames });
+      this.setState({ code: value, filteredCodes });
     } else {
       this.setState({ [name]: value });
     }
@@ -268,16 +267,7 @@ class AirLineComponent extends React.Component {
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">
                   <div className="col-sm-3">
-                    <label>Name </label>
-                    {/* <input
-                      type="text"
-                      name="name"
-                      value={this.state.name}
-                      onChange={this.handleChange}
-                      className="form-control"
-                      placeholder="Name"
-                    /> */}
-
+                    <label>Name</label>
                     <input
                       type="text"
                       name="name"
@@ -293,29 +283,21 @@ class AirLineComponent extends React.Component {
                       ))}
                     </datalist>
                   </div>
-                  <div className="col-sm-3">
-                    <label>Code </label>
-                    {/* <input
-                      type="text"
-                      name="code"
-                      value={this.state.code}
-                      onChange={this.handleChange}
-                      className="form-control"
-                      placeholder="Code"
-                    /> */}
 
+                  <div className="col-sm-3">
+                    <label>Code</label>
                     <input
                       type="text"
                       name="code"
                       value={this.state.code}
                       onChange={this.handleChange}
                       className="form-control"
-                      placeholder="Name"
-                      list="nameSuggestions"
+                      placeholder="Code"
+                      list="codeSuggestions"
                     />
-                    <datalist id="nameSuggestions">
-                      {this.state.filteredNames.map((name, index) => (
-                        <option key={index} value={name} />
+                    <datalist id="codeSuggestions">
+                      {this.state.filteredCodes.map((code, index) => (
+                        <option key={index} value={code} />
                       ))}
                     </datalist>
                   </div>
@@ -370,8 +352,6 @@ class AirLineComponent extends React.Component {
                   />
                 </div>
               </div>
-
-
             </div>
             <div className="borderless-box">
               <div className="table-responsive">

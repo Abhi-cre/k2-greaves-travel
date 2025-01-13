@@ -24,7 +24,10 @@ class StateComponent extends React.Component {
       perPage: 8,
       currentPage: 1,
       keyword: "",
-      filteredNames: [],
+      filteredCountries: [],
+      filteredStates: [],
+      countryName: "",
+      stateName: "",
     };
   }
   componentDidMount() {
@@ -211,39 +214,94 @@ class StateComponent extends React.Component {
   reloadWindow() {
     window.location.reload();
   }
+  // filterData() {
+  //   this.setState({ loader: true });
+  //   let stateListAll = this.state.stateListAll;
+  //   if (this.state.keyword.trim() != "") {
+  //     let stateListFilter = stateListAll.filter((item) => {
+  //       if (
+  //         item.countryName.search(new RegExp(this.state.keyword.trim(), "i")) !=
+  //           -1 &&
+  //         this.state.keyword.trim() != ""
+  //       ) {
+  //         return item;
+  //       }
+  //       if (
+  //         item.stateName.search(new RegExp(this.state.keyword.trim(), "i")) !=
+  //           -1 &&
+  //         this.state.keyword.trim() != ""
+  //       ) {
+  //         return item;
+  //       }
+  //     });
+  //     this.setState({ stateListFilter: stateListFilter, currentPage: 1 });
+  //     setTimeout(() => {
+  //       this.setState({ loader: false });
+  //       this.props.history("/settings/state");
+  //     }, 10);
+  //   } else {
+  //     this.clearData();
+  //   }
+  // }
+
   filterData() {
     this.setState({ loader: true });
     let stateListAll = this.state.stateListAll;
-    if (this.state.keyword.trim() != "") {
-      let stateListFilter = stateListAll.filter((item) => {
-        if (
-          item.countryName.search(new RegExp(this.state.keyword.trim(), "i")) !=
+    console.log(stateListAll, "stateListAllstateListAll");
+
+    let stateListFilter = stateListAll.map((item) => {
+      item.display = true;
+      if (
+        item.countryName.search(
+          new RegExp(this.state.countryName.trim(), "i")
+        ) == -1 &&
+        this.state.countryName.trim() != ""
+      ) {
+        item.display = false;
+      }
+      if (
+        item.stateName.search(new RegExp(this.state.stateName.trim(), "i")) ==
           -1 &&
-          this.state.keyword.trim() != ""
-        ) {
-          return item;
-        }
-        if (
-          item.stateName.search(new RegExp(this.state.keyword.trim(), "i")) !=
-          -1 &&
-          this.state.keyword.trim() != ""
-        ) {
-          return item;
-        }
-      });
-      this.setState({ stateListFilter: stateListFilter, currentPage: 1 });
-      setTimeout(() => {
-        this.setState({ loader: false });
-        this.props.history("/settings/state");
-      }, 10);
-    } else {
-      this.clearData();
-    }
+        this.state.stateName.trim() != ""
+      ) {
+        item.display = false;
+      }
+
+      if (
+        item.countryName.search(
+          new RegExp(this.state.countryName.trim(), "i")
+        ) == -1 &&
+        this.state.countryName.trim() != ""
+      ) {
+        console.log("hii");
+        item.display = false;
+      }
+      if (
+        item.vendorTypeId != this.state.vendorTypeId &&
+        this.state.vendorTypeId.trim() != ""
+      ) {
+        item.display = false;
+      }
+
+      return item;
+    });
+
+    let stateListFilter1 = stateListFilter.filter(
+      (item) => item.display == true
+    );
+
+    this.setState({ stateListFilter: stateListFilter1, currentPage: 1 });
+    setTimeout(() => {
+      this.setState({ loader: false });
+      this.props.history("/settings/state");
+    }, 10);
   }
   clearData() {
     this.setState({
       loader: true,
       keyword: "",
+      countryName: "",
+      stateName: "",
       currentPage: 1,
       stateListFilter: this.state.stateListAll,
     });
@@ -253,9 +311,29 @@ class StateComponent extends React.Component {
     }, 10);
   }
   handleChange = (e) => {
-    const name = e.target.name;
-    let value = e.target.value;
-    this.setState({ ...this.state, [name]: value });
+    const { name, value } = e.target;
+
+    if (name === "countryName") {
+      const filteredCountries = this.state.stateListFilter
+        .map((user) => user.countryName)
+        .filter((countryName) =>
+          countryName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ countryName: value, filteredCountries });
+    } else if (name === "stateName") {
+      const filteredStates = this.state.stateListFilter
+        .map((user) => user.stateName)
+        .filter((stateName) =>
+          stateName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ stateName: value, filteredStates });
+    } else {
+      this.setState({ [name]: value });
+    }
   };
 
   render() {
@@ -281,27 +359,35 @@ class StateComponent extends React.Component {
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">
                   <div className="col-sm-3">
-                    <label>Search </label>
-                    {/* <input
-                      type="text"
-                      name="keyword"
-                      value={this.state.keyword}
-                      onChange={this.handleChange}
-                      className="form-control"
-                      placeholder=""
-                    /> */}
-
+                    <label>Country Name</label>
                     <input
                       type="text"
-                      name="keyword"
-                      value={this.state.keyword}
+                      name="countryName"
+                      value={this.state.countryName}
                       onChange={this.handleChange}
                       className="form-control"
-                      placeholder="Name"
-                      list="nameSuggestions"
+                      placeholder="Country Name"
+                      list="countrySuggestions"
                     />
-                    <datalist id="nameSuggestions">
-                      {this.state.filteredNames.map((name, index) => (
+                    <datalist id="countrySuggestions">
+                      {this.state.filteredCountries.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
+                  </div>
+                  <div className="col-sm-3">
+                    <label>State Name</label>
+                    <input
+                      type="text"
+                      name="stateName"
+                      value={this.state.stateName}
+                      onChange={this.handleChange}
+                      className="form-control"
+                      placeholder="State Name"
+                      list="stateSuggestions"
+                    />
+                    <datalist id="stateSuggestions">
+                      {this.state.filteredStates.map((name, index) => (
                         <option key={index} value={name} />
                       ))}
                     </datalist>
@@ -357,8 +443,6 @@ class StateComponent extends React.Component {
                   />
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">

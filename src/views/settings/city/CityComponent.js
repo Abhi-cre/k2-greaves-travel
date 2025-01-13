@@ -22,7 +22,13 @@ class CityComponent extends React.Component {
       perPage: 8,
       currentPage: 1,
       keyword: "",
+      stateName: "",
+      cityName: "",
+      countryName: "",
       countryList: [],
+      filteredCountries: [],
+      filteredStates: [],
+      filteredCities: [],
     };
   }
   componentDidMount() {
@@ -238,21 +244,21 @@ class CityComponent extends React.Component {
       let cityListFilter = cityListAll.filter((item) => {
         if (
           item.cityName.search(new RegExp(this.state.keyword.trim(), "i")) !=
-          -1 &&
+            -1 &&
           this.state.keyword.trim() != ""
         ) {
           return item;
         }
         if (
           item.stateName.search(new RegExp(this.state.keyword.trim(), "i")) !=
-          -1 &&
+            -1 &&
           this.state.keyword.trim() != ""
         ) {
           return item;
         }
         if (
           item.countryName.search(new RegExp(this.state.keyword.trim(), "i")) !=
-          -1 &&
+            -1 &&
           this.state.keyword.trim() != ""
         ) {
           return item;
@@ -267,10 +273,71 @@ class CityComponent extends React.Component {
       this.clearData();
     }
   }
+
+  filterData() {
+    this.setState({ loader: true });
+    let cityListAll = this.state.cityListAll;
+
+    let cityListFilter = cityListAll.map((item) => {
+      item.display = true;
+      if (
+        item.countryName.search(
+          new RegExp(this.state.countryName.trim(), "i")
+        ) == -1 &&
+        this.state.countryName.trim() != ""
+      ) {
+        item.display = false;
+      }
+      if (
+        item.stateName.search(new RegExp(this.state.stateName.trim(), "i")) ==
+          -1 &&
+        this.state.stateName.trim() != ""
+      ) {
+        console.log("state");
+        item.display = false;
+      }
+      if (
+        item.cityName.search(new RegExp(this.state.cityName.trim(), "i")) ==
+          -1 &&
+        this.state.cityName.trim() != ""
+      ) {
+        item.display = false;
+      }
+      if (
+        item.countryName.search(
+          new RegExp(this.state.countryName.trim(), "i")
+        ) == -1 &&
+        this.state.countryName.trim() != ""
+      ) {
+        console.log("hii");
+        item.display = false;
+      }
+      if (
+        item.vendorTypeId != this.state.vendorTypeId &&
+        this.state.vendorTypeId.trim() != ""
+      ) {
+        item.display = false;
+      }
+
+      return item;
+    });
+
+    let cityListFilter1 = cityListFilter.filter((item) => item.display == true);
+
+    this.setState({ cityListFilter: cityListFilter1, currentPage: 1 });
+    setTimeout(() => {
+      this.setState({ loader: false });
+      this.props.history("/settings/city");
+    }, 10);
+  }
+
   clearData() {
     this.setState({
       loader: true,
       keyword: "",
+      countryName: "",
+      stateName: "",
+      cityName: "",
       currentPage: 1,
       cityListFilter: this.state.cityListAll,
     });
@@ -280,9 +347,39 @@ class CityComponent extends React.Component {
     }, 10);
   }
   handleChange = (e) => {
-    const name = e.target.name;
-    let value = e.target.value;
-    this.setState({ ...this.state, [name]: value });
+    const { name, value } = e.target;
+
+    if (name === "countryName") {
+      const filteredCountries = this.state.cityListFilter
+        .map((user) => user.countryName)
+        .filter((countryName) =>
+          countryName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ countryName: value, filteredCountries });
+    } else if (name === "stateName") {
+      const filteredStates = this.state.cityListFilter
+        .map((user) => user.stateName)
+        .filter((stateName) =>
+          stateName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ stateName: value, filteredStates });
+    } else if (name === "cityName") {
+      const filteredCities = this.state.cityListFilter
+        .map((user) => user.cityName)
+        .filter((cityName) =>
+          cityName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ cityName: value, filteredCities });
+    } else {
+      // For other fields, just update the state
+      this.setState({ [name]: value });
+    }
   };
 
   render() {
@@ -308,15 +405,55 @@ class CityComponent extends React.Component {
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">
                   <div className="col-sm-3">
-                    <label>Search </label>
+                    <label>Country Name </label>
                     <input
                       type="text"
-                      name="keyword"
-                      value={this.state.keyword}
+                      name="countryName"
+                      value={this.state.countryName}
                       onChange={this.handleChange}
                       className="form-control"
-                      placeholder=""
+                      placeholder="Country Name"
+                      list="countrySuggestions"
                     />
+                    <datalist id="countrySuggestions">
+                      {this.state.filteredCountries.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
+                  </div>
+                  <div className="col-sm-3">
+                    <label>State Name </label>
+                    <input
+                      type="text"
+                      name="stateName"
+                      value={this.state.stateName}
+                      onChange={this.handleChange}
+                      className="form-control"
+                      placeholder="State Name"
+                      list="stateSuggestions"
+                    />
+                    <datalist id="stateSuggestions">
+                      {this.state.filteredStates.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
+                  </div>
+                  <div className="col-sm-3">
+                    <label>City Name </label>
+                    <input
+                      type="text"
+                      name="cityName"
+                      value={this.state.cityName}
+                      onChange={this.handleChange}
+                      className="form-control"
+                      placeholder="City Name"
+                      list="citySuggestions"
+                    />
+                    <datalist id="citySuggestions">
+                      {this.state.filteredCities.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
                   </div>
 
                   <div className="col-sm-1 pt-4">
@@ -368,8 +505,6 @@ class CityComponent extends React.Component {
                   />
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">

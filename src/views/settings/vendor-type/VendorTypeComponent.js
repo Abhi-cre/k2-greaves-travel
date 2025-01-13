@@ -22,6 +22,7 @@ class VendorTypeComponent extends React.Component {
       perPage: 8,
       currentPage: 1,
       keyword: "",
+      filteredNames: [],
     };
   }
   componentDidMount() {
@@ -219,7 +220,15 @@ class VendorTypeComponent extends React.Component {
   handleChange = (e) => {
     const name = e.target.name;
     let value = e.target.value;
-    this.setState({ ...this.state, [name]: value });
+
+    if (name === "keyword") {
+      const filteredNames = this.state.vendorTypeListFilter
+        .map((user) => user.name)
+        .filter((name) => name.toLowerCase().includes(value.toLowerCase()));
+      this.setState({ keyword: value, filteredNames: filteredNames });
+    } else {
+      this.setState({ [name]: value });
+    }
   };
 
   render() {
@@ -255,7 +264,13 @@ class VendorTypeComponent extends React.Component {
                       onChange={this.handleChange}
                       className="form-control"
                       placeholder=""
+                      list="nameSuggestions"
                     />
+                    <datalist id="nameSuggestions">
+                      {this.state.filteredNames.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
                   </div>
 
                   <div className="col-sm-1 pt-4">
@@ -308,10 +323,7 @@ class VendorTypeComponent extends React.Component {
                     sheetName="Action Types"
                   />
                 </div>
-
               </div>
-
-
             </div>
 
             <div className="borderless-box">

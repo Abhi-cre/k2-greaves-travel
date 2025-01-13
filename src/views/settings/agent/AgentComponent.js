@@ -28,6 +28,8 @@ class AgentComponent extends React.Component {
       agencyList: [],
       agentTypeList: [],
       filteredNames: [],
+      filteredChannel: [],
+      filteredAgency: [],
     };
   }
   componentDidMount() {
@@ -69,41 +71,25 @@ class AgentComponent extends React.Component {
         }
       }
 
-      let agencyNameListData = this.props.agencyNameListData;
-      console.log(agencyNameListData, "if--agencyNameListDataagencyNameListData");
-
-      if (agencyNameListData.length > 0) {
-        this.setState({ agencyList: agencyNameListData });
-      } else {
-        let typeResponse = await SettingApi.GetSettingList("/api/AgencyType/List");
-        console.log(typeResponse, "else---typeResponse");
-
-        if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
-          const agencyTypes = ArrayHelper.getValue(typeResponse, "agencyTypes");
-          this.setState({
-            loader: false,
-            agencyList: agencyTypes,
-          });
-          this.props.agencyNameList(agencyTypes);
-        }
-      }
-
       let agencyTypeListData = this.props.agencyTypeListData;
-      console.log(agencyTypeListData, "if--agencyTypeListDataagencyTypeListData");
 
       if (agencyTypeListData.length > 0) {
         this.setState({ agentTypeList: agencyTypeListData });
       } else {
-        let typeResponse = await SettingApi.GetSettingList("/api/AgencyType/List");
-        console.log(typeResponse, "else---typeResponse");
+        let typeResponse = await SettingApi.GetSettingList(
+          "/api/AgentType/List"
+        );
 
         if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
-          const agencyTypesList2 = ArrayHelper.getValue(typeResponse, "agencyTypesList2");
+          const agentTypesList2 = ArrayHelper.getValue(
+            typeResponse,
+            "agentTypes"
+          );
           this.setState({
             loader: false,
-            agentTypeList: agencyTypesList2,
+            agentTypeList: agentTypesList2,
           });
-          this.props.agencyTypeList(agencyTypesList2);
+          this.props.agencyTypeList(agentTypesList2);
         }
       }
 
@@ -242,23 +228,17 @@ class AgentComponent extends React.Component {
     let agentListFilter = agentListAll.map((item) => {
       item.display = true;
       if (
-        item.fulllName.search(new RegExp(this.state.fulllName.trim(), "i")) ===
-        -1 &&
-        this.state.fulllName.trim() !== ""
+        item.fulllName.search(new RegExp(this.state.fulllName.trim(), "i")) ==
+          -1 &&
+        this.state.fulllName.trim() != ""
       ) {
         item.display = false;
       }
 
       if (
-        this.state.agencyName &&
-        item.agencyId !== parseInt(this.state.agencyName)
-      ) {
-        item.display = false;
-      }
-
-      if (
-        this.state.agentTypeName &&
-        item.agentTypeId !== parseInt(this.state.agentTypeName)
+        item.agencyName.search(new RegExp(this.state.agencyName.trim(), "i")) ==
+          -1 &&
+        this.state.agencyName.trim() != ""
       ) {
         item.display = false;
       }
@@ -268,6 +248,15 @@ class AgentComponent extends React.Component {
         item.agentContactChannelName.search(
           new RegExp(this.state.agentContactChannelName.trim(), "i")
         ) === -1
+      ) {
+        item.display = false;
+      }
+
+      if (
+        item.agentTypeName.search(
+          new RegExp(this.state.agentTypeName.trim(), "i")
+        ) == -1 &&
+        this.state.agentTypeName.trim() != ""
       ) {
         item.display = false;
       }
@@ -307,21 +296,41 @@ class AgentComponent extends React.Component {
       this.props.history("/settings/agent");
     }, 10);
   }
+
   handleChange = (e) => {
-    const name = e.target.name;
-    let value = e.target.value;
+    const { name, value } = e.target;
+
     if (name === "fulllName") {
       const filteredNames = this.state.agentListFilter
         .map((user) => user.fulllName)
         .filter((fulllName) =>
           fulllName.toLowerCase().includes(value.toLowerCase())
-        );
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-      this.setState({ fulllName: value, filteredNames: filteredNames });
+      this.setState({ fulllName: value, filteredNames });
+    } else if (name === "agentContactChannelName") {
+      const filteredChannel = this.state.agentListFilter
+        .map((user) => user.agentContactChannelName)
+        .filter((agentContactChannelName) =>
+          agentContactChannelName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ agentContactChannelName: value, filteredChannel });
+    } else if (name === "agencyName") {
+      const filteredAgency = this.state.agentListFilter
+        .map((user) => user.agencyName)
+        .filter((agencyName) =>
+          agencyName.toLowerCase().includes(value.toLowerCase())
+        )
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      this.setState({ agencyName: value, filteredAgency });
     } else {
+      // For other fields, just update the state
       this.setState({ [name]: value });
     }
-    // this.setState({ ...this.state, [name]: value });
   };
 
   getAgenttype = async () => {
@@ -398,7 +407,7 @@ class AgentComponent extends React.Component {
 
                   <div className="col-sm-2">
                     <label>Agency </label>
-                    <select
+                    {/* <select
                       required
                       className="form-select form-noradious"
                       name="agencyName"
@@ -408,12 +417,26 @@ class AgentComponent extends React.Component {
                       <option value="">Agency</option>
                       {Array.isArray(this.state.agencyList) &&
                         this.state.agencyList.map((item, key) => (
-
                           <option key={`agencyList-${key}`} value={item.id}>
                             {item.name}
                           </option>
                         ))}
-                    </select>
+                    </select> */}
+
+                    <input
+                      type="text"
+                      name="agencyName"
+                      value={this.state.agencyName}
+                      onChange={this.handleChange}
+                      className="form-control"
+                      placeholder="Agency Name"
+                      list="agencyNameSuggestions"
+                    />
+                    <datalist id="agencyNameSuggestions">
+                      {this.state.filteredAgency.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
                   </div>
                   <div className="col-sm-2">
                     <label>Agent Type </label>
@@ -425,9 +448,13 @@ class AgentComponent extends React.Component {
                       onChange={this.handleChange}
                     >
                       <option value="">Agent Type</option>
+
                       {Array.isArray(this.state.agentTypeList) &&
                         this.state.agentTypeList.map((item, key) => (
-                          <option key={`agentTypeList-${key}`} value={item.name}>
+                          <option
+                            key={`agentTypeList-${key}`}
+                            value={item.name}
+                          >
                             {item.name}
                           </option>
                         ))}
@@ -442,7 +469,13 @@ class AgentComponent extends React.Component {
                       onChange={this.handleChange}
                       className="form-control"
                       placeholder="Contact Channel"
+                      list="channelSuggestions"
                     />
+                    <datalist id="channelSuggestions">
+                      {this.state.filteredChannel.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
                   </div>
 
                   <div className="col-sm-1 pt-4">
@@ -510,8 +543,6 @@ class AgentComponent extends React.Component {
                   />
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">

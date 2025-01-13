@@ -28,7 +28,8 @@ class AgencyComponent extends React.Component {
       agencyTypeList: [],
       greavesOfficeList: [],
       salesRegionList: [],
-      saleRegionList: []
+      saleRegionList: [],
+      filteredNames: [],
     };
   }
   componentDidMount() {
@@ -69,12 +70,17 @@ class AgencyComponent extends React.Component {
       }
 
       let agencyTypeListInfoData = this.props.agencyTypeListInfoData;
-      console.log(agencyTypeListInfoData, "if--agencyTypeListInfoDataagencyTypeListInfoData");
+      console.log(
+        agencyTypeListInfoData,
+        "if--agencyTypeListInfoDataagencyTypeListInfoData"
+      );
 
       if (agencyTypeListInfoData.length > 0) {
         this.setState({ agencyTypeList: agencyTypeListInfoData });
       } else {
-        let typeResponse = await SettingApi.GetSettingList("/api/AgencyType/List");
+        let typeResponse = await SettingApi.GetSettingList(
+          "/api/AgencyType/List"
+        );
         console.log(typeResponse, "else---typeResponse");
 
         if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
@@ -88,16 +94,22 @@ class AgencyComponent extends React.Component {
       }
 
       let greavesOfficeListData = this.props.greavesOfficeListData;
-      console.log(greavesOfficeListData, "if--greavesOfficeListDatagreavesOfficeListData");
+      console.log(
+        greavesOfficeListData,
+        "if--greavesOfficeListDatagreavesOfficeListData"
+      );
 
       if (greavesOfficeListData.length > 0) {
         this.setState({ greavesOfficeList: greavesOfficeListData });
       } else {
-        let typeResponse = await SettingApi.GetSettingList("/api/GreavesOffice/List");
+        let typeResponse = await SettingApi.GetSettingList(
+          "/api/GreavesOffice/List"
+        );
         console.log(typeResponse, "else---typeResponse");
 
         if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
-          const greavesOffices = ArrayHelper.getValue(typeResponse, "greavesOffices") || []; // Extract greavesOffices
+          const greavesOffices =
+            ArrayHelper.getValue(typeResponse, "greavesOffices") || []; // Extract greavesOffices
           console.log(greavesOffices, "Extracted greavesOffices from API");
           this.setState({
             loader: false,
@@ -110,16 +122,22 @@ class AgencyComponent extends React.Component {
       //2
 
       let saleRegionListData = this.props.saleRegionListData;
-      console.log(saleRegionListData, "if--saleRegionListDatasaleRegionListData");
+      console.log(
+        saleRegionListData,
+        "if--saleRegionListDatasaleRegionListData"
+      );
 
       if (saleRegionListData.length > 0) {
         this.setState({ salesRegionList: saleRegionListData });
       } else {
-        let typeResponse = await SettingApi.GetSettingList("/api/SalesRegion/List");
+        let typeResponse = await SettingApi.GetSettingList(
+          "/api/SalesRegion/List"
+        );
         console.log(typeResponse, "else---typeResponse");
 
         if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
-          const saleRegions = ArrayHelper.getValue(typeResponse, "salesRegions") || [];
+          const saleRegions =
+            ArrayHelper.getValue(typeResponse, "salesRegions") || [];
           console.log(saleRegions, "Extracted saleRegions from API");
 
           this.setState({
@@ -128,11 +146,7 @@ class AgencyComponent extends React.Component {
           });
           this.props.saleRegionList(saleRegions);
         }
-
-
       }
-
-
 
       this.setState({
         loader: false,
@@ -329,8 +343,14 @@ class AgencyComponent extends React.Component {
   handleChange = (e) => {
     const name = e.target.name;
     let value = e.target.value;
-    console.log(`Changed field: ${name}, value: ${value}`);
-    this.setState({ ...this.state, [name]: value });
+    if (name === "name") {
+      const filteredNames = this.state.agencyListFilter
+        .map((user) => user.name)
+        .filter((name) => name.toLowerCase().includes(value.toLowerCase()));
+      this.setState({ name: value, filteredNames: filteredNames });
+    } else {
+      this.setState({ [name]: value });
+    }
   };
 
   getAgencyList2 = async () => {
@@ -357,8 +377,10 @@ class AgencyComponent extends React.Component {
 
     if (greavesOfficeListData.length > 0) {
       this.setState({ greavesOfficeList: greavesOfficeListData });
-      console.log(this.state.greavesOfficeList, "Current greavesOfficeList state");
-
+      console.log(
+        this.state.greavesOfficeList,
+        "Current greavesOfficeList state"
+      );
     }
     this.setState({ loader: false });
   };
@@ -407,7 +429,13 @@ class AgencyComponent extends React.Component {
                       onChange={this.handleChange}
                       className="form-control"
                       placeholder="Name"
+                      list="nameSuggestions"
                     />
+                    <datalist id="nameSuggestions">
+                      {this.state.filteredNames.map((name, index) => (
+                        <option key={index} value={name} />
+                      ))}
+                    </datalist>
                   </div>
                   <div className="col-sm-2">
                     <label>Agency Type </label>
@@ -428,7 +456,6 @@ class AgencyComponent extends React.Component {
                         );
                       })}
                     </select>
-
                   </div>
                   <div className="col-sm-2">
                     <label>Greaves Office </label>
@@ -451,13 +478,14 @@ class AgencyComponent extends React.Component {
                       <option value="">Greaves Office</option>
                       {Array.isArray(this.state.greavesOfficeList) &&
                         this.state.greavesOfficeList.map((item, key) => (
-
-                          <option key={`greavesOfficeList-${key}`} value={item.id}>
+                          <option
+                            key={`greavesOfficeList-${key}`}
+                            value={item.id}
+                          >
                             {item.name}
                           </option>
                         ))}
                     </select>
-
                   </div>
                   <div className="col-sm-2">
                     <label>Sales Region </label>
@@ -471,11 +499,13 @@ class AgencyComponent extends React.Component {
                       <option value="">Sales Region</option>
                       {Array.isArray(this.state.salesRegionList) &&
                         this.state.salesRegionList.map((item, key) => (
-                          <option key={`salesRegionList-${key}`} value={item.id}>
+                          <option
+                            key={`salesRegionList-${key}`}
+                            value={item.id}
+                          >
                             {item.name}
                           </option>
                         ))}
-
                     </select>
                   </div>
 
@@ -494,7 +524,7 @@ class AgencyComponent extends React.Component {
                       type="button"
                       className="btn btn-sm btn-secondary rounded"
                     >
-                      Clearrrrr
+                      Clear
                     </button>
                   </div>
                 </div>
@@ -539,9 +569,7 @@ class AgencyComponent extends React.Component {
                     sheetName="Action Types"
                   />
                 </div>
-
               </div>
-
             </div>
 
             <div className="borderless-box">
