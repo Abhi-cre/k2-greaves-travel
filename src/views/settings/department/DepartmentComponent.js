@@ -153,7 +153,7 @@ class DepartmentComponent extends React.Component {
 
       let formData = {
         requestedUserId: parseInt(localStorage.getItem(USER_ID)),
-        channelId: parseInt(str),
+        departmentId: parseInt(str),
       };
       let response = await SettingApi.PostSettingList(
         formData,
@@ -332,13 +332,11 @@ class DepartmentComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="Department.xlsx"
+                    sheetName="Department"
                   />
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">

@@ -321,12 +321,11 @@ class TourTypeComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="TourType.xlsx"
+                    sheetName="TourType"
                   />
                 </div>
               </div>
-
             </div>
 
             <div className="borderless-box">

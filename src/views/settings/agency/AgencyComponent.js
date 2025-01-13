@@ -565,8 +565,8 @@ class AgencyComponent extends React.Component {
                       "stateName",
                       "countryName",
                     ]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="Agency.xlsx"
+                    sheetName="Agency"
                   />
                 </div>
               </div>

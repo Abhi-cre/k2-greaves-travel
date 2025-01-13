@@ -334,13 +334,11 @@ class ClientStatusComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="ClientStatus.xlsx"
+                    sheetName="ClientStatus"
                   />
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">
@@ -401,7 +399,7 @@ class ClientStatusComponent extends React.Component {
                   <p>No Record Found</p>
                 )}
                 {this.state.clientStatusListFilter.length >
-                  this.state.perPage ? (
+                this.state.perPage ? (
                   <PaginationComponent
                     total={this.state.clientStatusListFilter.length}
                     pageSize={this.state.perPage}

@@ -333,13 +333,11 @@ class HearedAboutComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="HearedAbout.xlsx"
+                    sheetName="HearedAbout"
                   />
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">
@@ -379,8 +377,18 @@ class HearedAboutComponent extends React.Component {
                               ></i>
                             </td>
                             {/* <td>
-                                                    <i onClick={()=>this.HearedAboutDelete(ArrayHelper.getValue(item,'id'))} className="fa fa-trash btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Trash"></i>
-                                                </td> */}
+                              <i
+                                onClick={() =>
+                                  this.HearedAboutDelete(
+                                    ArrayHelper.getValue(item, "id")
+                                  )
+                                }
+                                className="fa fa-trash btn"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Trash"
+                              ></i>
+                            </td> */}
                           </tr>
                         );
                       })}
@@ -390,7 +398,7 @@ class HearedAboutComponent extends React.Component {
                   <p>No Record Found</p>
                 )}
                 {this.state.hearedAboutListFilter.length >
-                  this.state.perPage ? (
+                this.state.perPage ? (
                   <PaginationComponent
                     total={this.state.hearedAboutListFilter.length}
                     pageSize={this.state.perPage}

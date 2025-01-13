@@ -334,8 +334,8 @@ class SalesCategoryComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="SalesCategory.xlsx"
+                    sheetName="SalesCategory"
                   />
                 </div>
               </div>
@@ -402,7 +402,7 @@ class SalesCategoryComponent extends React.Component {
                   <p>No Record Found</p>
                 )}
                 {this.state.salesCategoryListFilter.length >
-                  this.state.perPage ? (
+                this.state.perPage ? (
                   <PaginationComponent
                     total={this.state.salesCategoryListFilter.length}
                     pageSize={this.state.perPage}

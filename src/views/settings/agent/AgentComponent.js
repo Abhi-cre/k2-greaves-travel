@@ -538,8 +538,8 @@ class AgentComponent extends React.Component {
                       "contactNo",
                       "specialties",
                     ]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="Agent.xlsx"
+                    sheetName="Agent"
                   />
                 </div>
               </div>

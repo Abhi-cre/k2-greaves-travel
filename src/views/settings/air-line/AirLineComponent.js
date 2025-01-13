@@ -347,8 +347,8 @@ class AirLineComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name", "code"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="AirLine.xlsx"
+                    sheetName="AirLine"
                   />
                 </div>
               </div>

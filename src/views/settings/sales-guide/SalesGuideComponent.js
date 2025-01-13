@@ -45,7 +45,6 @@ class SalesGuideComponent extends React.Component {
       });
     } else {
       this.getSalesGuideList();
-
     }
     this.getsalesGuideList2();
   }
@@ -67,16 +66,24 @@ class SalesGuideComponent extends React.Component {
       }
 
       let saleCategoryListData = this.props.saleCategoryListData;
-      console.log(saleCategoryListData, "if--saleCategoryListDatasaleCategoryListData");
+      console.log(
+        saleCategoryListData,
+        "if--saleCategoryListDatasaleCategoryListData"
+      );
 
       if (saleCategoryListData.length > 0) {
         this.setState({ salesCategoryList: saleCategoryListData });
       } else {
-        let typeResponse = await SettingApi.GetSettingList("/api/SalesCategory/List");
+        let typeResponse = await SettingApi.GetSettingList(
+          "/api/SalesCategory/List"
+        );
         console.log(typeResponse, "else---typeResponse");
 
         if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
-          const saleCatogory = ArrayHelper.getValue(typeResponse, "salesCategories"); // Correct key
+          const saleCatogory = ArrayHelper.getValue(
+            typeResponse,
+            "salesCategories"
+          ); // Correct key
           this.setState({
             loader: false,
             salesCategoryList: saleCatogory, // Update the state with salesCategories
@@ -277,16 +284,24 @@ class SalesGuideComponent extends React.Component {
 
   getsalesGuideList2 = async () => {
     let saleCategoryListData = this.props.saleCategoryListData;
-    console.log(saleCategoryListData, "if--saleCategoryListDatasaleCategoryListData");
+    console.log(
+      saleCategoryListData,
+      "if--saleCategoryListDatasaleCategoryListData"
+    );
 
     if (saleCategoryListData.length > 0) {
       this.setState({ salesCategoryList: saleCategoryListData });
     } else {
-      let typeResponse = await SettingApi.GetSettingList("/api/SalesCategory/List");
+      let typeResponse = await SettingApi.GetSettingList(
+        "/api/SalesCategory/List"
+      );
       console.log(typeResponse, "else---typeResponse");
 
       if (ArrayHelper.getValue(typeResponse, "isSuccess") === true) {
-        const saleCatogory = ArrayHelper.getValue(typeResponse, "salesCategories"); // Correct key
+        const saleCatogory = ArrayHelper.getValue(
+          typeResponse,
+          "salesCategories"
+        ); // Correct key
         this.setState({
           loader: false,
           salesCategoryList: saleCatogory, // Update the state with salesCategories
@@ -354,16 +369,17 @@ class SalesGuideComponent extends React.Component {
                       value={this.state.salesCategoryName}
                       onChange={this.handleChange}
                     >
-                      <option value="">Select Department</option>
+                      <option value="">Select Sales Category</option>
                       {Array.isArray(this.state.salesCategoryList) &&
                         this.state.salesCategoryList.map((item, key) => (
-                          <option key={`salesCategoryList-${key}`} value={item.name}>
+                          <option
+                            key={`salesCategoryList-${key}`}
+                            value={item.name}
+                          >
                             {item.name}
                           </option>
                         ))}
                     </select>
-
-
                   </div>
 
                   <div className="col-sm-1 pt-4">
@@ -409,7 +425,6 @@ class SalesGuideComponent extends React.Component {
                     />
                   </button>
 
-
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={[
@@ -423,13 +438,11 @@ class SalesGuideComponent extends React.Component {
                       "region",
                       "countryName",
                     ]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="SalesGuide.xlsx"
+                    sheetName="SalesGuide"
                   />
                 </div>
               </div>
-
-
             </div>
 
             <div className="borderless-box">

@@ -319,8 +319,8 @@ class VendorTypeComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="VendorType.xlsx"
+                    sheetName="VendorType"
                   />
                 </div>
               </div>

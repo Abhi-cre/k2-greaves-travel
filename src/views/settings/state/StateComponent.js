@@ -439,7 +439,7 @@ class StateComponent extends React.Component {
                     data={dataToExport}
                     columns={["countryName", "stateName"]}
                     fileName="State.xlsx"
-                    sheetName="Action Types"
+                    sheetName="State"
                   />
                 </div>
               </div>

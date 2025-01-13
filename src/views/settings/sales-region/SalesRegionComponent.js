@@ -332,13 +332,11 @@ class SalesRegionComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="SalesRegion.xlsx"
+                    sheetName="SalesRegion"
                   />
                 </div>
               </div>
-
-
             </div>
             <div className="borderless-box">
               <div className="table-responsive">
@@ -398,7 +396,7 @@ class SalesRegionComponent extends React.Component {
                   <p>No Record Found</p>
                 )}
                 {this.state.salesRegionListFilter.length >
-                  this.state.perPage ? (
+                this.state.perPage ? (
                   <PaginationComponent
                     total={this.state.salesRegionListFilter.length}
                     pageSize={this.state.perPage}

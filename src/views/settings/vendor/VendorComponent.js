@@ -509,8 +509,8 @@ class VendorComponent extends React.Component {
                       "address",
                       "zip",
                     ]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="Vendor.xlsx"
+                    sheetName="Vendor"
                   />
                 </div>
               </div>

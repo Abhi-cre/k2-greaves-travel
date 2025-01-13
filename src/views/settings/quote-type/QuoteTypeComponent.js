@@ -153,7 +153,7 @@ class QuoteTypeComponent extends React.Component {
 
       let formData = {
         requestedUserId: parseInt(localStorage.getItem(USER_ID)),
-        vendorTypeId: parseInt(str),
+        quoteTypeId: parseInt(str),
       };
       let response = await SettingApi.PostSettingList(
         formData,
@@ -324,12 +324,11 @@ class QuoteTypeComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="QuoteType.xlsx"
+                    sheetName="Quote Types"
                   />
                 </div>
               </div>
-
             </div>
 
             <div className="borderless-box">

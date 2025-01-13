@@ -160,7 +160,7 @@ class GreavesOfficeComponent extends React.Component {
 
       let formData = {
         requestedUserId: parseInt(localStorage.getItem(USER_ID)),
-        clientStatusId: parseInt(str),
+        greavesOfficeId: parseInt(str),
       };
       let response = await SettingApi.PostSettingList(
         formData,
@@ -336,12 +336,11 @@ class GreavesOfficeComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="GreavesOffice.xlsx"
+                    sheetName="GreavesOffice"
                   />
                 </div>
               </div>
-
             </div>
 
             <div className="borderless-box">
@@ -404,7 +403,7 @@ class GreavesOfficeComponent extends React.Component {
                   <p>No Record Found</p>
                 )}
                 {this.state.greavesOfficeListFilter.length >
-                  this.state.perPage ? (
+                this.state.perPage ? (
                   <PaginationComponent
                     total={this.state.greavesOfficeListFilter.length}
                     pageSize={this.state.perPage}

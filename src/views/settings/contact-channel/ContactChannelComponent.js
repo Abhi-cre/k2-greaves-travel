@@ -353,14 +353,11 @@ class ContactChannelComponent extends React.Component {
                   <ExcelDownloadButton
                     data={dataToExport}
                     columns={["name"]}
-                    fileName="ActionTypes.xlsx"
-                    sheetName="Action Types"
+                    fileName="ContactChannel.xlsx"
+                    sheetName="ContactChannel"
                   />
                 </div>
-
               </div>
-
-
             </div>
 
             <div className="borderless-box">
@@ -423,7 +420,7 @@ class ContactChannelComponent extends React.Component {
                   <p>No Record Found</p>
                 )}
                 {this.state.contactChannelListFilter.length >
-                  this.state.perPage ? (
+                this.state.perPage ? (
                   <PaginationComponent
                     total={this.state.contactChannelListFilter.length}
                     pageSize={this.state.perPage}

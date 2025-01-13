@@ -501,7 +501,7 @@ class CityComponent extends React.Component {
                     data={dataToExport}
                     columns={["countryName", "stateName", "cityName"]}
                     fileName="City.xlsx"
-                    sheetName="Action Types"
+                    sheetName="City"
                   />
                 </div>
               </div>
