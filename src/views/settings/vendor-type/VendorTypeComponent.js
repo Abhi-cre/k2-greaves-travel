@@ -41,12 +41,16 @@ class VendorTypeComponent extends React.Component {
         vendorTypeList: vendorTypeList,
       });
     } else {
+      console.log("-==-=-=-=");
+
       this.getVendorTypeList();
     }
   }
   getVendorTypeList = async () => {
     this.setState({ loader: true });
     let response = await SettingApi.GetSettingList("/api/VendorType/List");
+
+    console.log(response, "responseresponseresponseresponse-==-response");
     if (ArrayHelper.getValue(response, "isSuccess") == true) {
       let vendorTypeList = [];
 
@@ -251,7 +255,7 @@ class VendorTypeComponent extends React.Component {
             <div className="row mb-3">
               <div className="col-md-2">
                 <br />
-                <h5 className="">Vendor Type</h5>
+                <h5 className="">Vendor Typehh</h5>
               </div>
               <div className="col-md-8">
                 <div className="row g-3 align-items-center">
