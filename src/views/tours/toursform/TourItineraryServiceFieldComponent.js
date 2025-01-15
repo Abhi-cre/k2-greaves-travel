@@ -1643,14 +1643,14 @@ class TourItineraryServiceFieldComponent extends React.Component {
           className="p-3 border mt-2 mb-2 boxAddPassanger whiteBackgound"
           id="serviceItenaryHeading"
         >
-          <span className="me-2 heading">Itinerary Serviceggggggggggg</span>{" "}
+          <span className="me-2 heading">Itinerary Service</span>{" "}
           <span className="txt-right floatright">
             <button
               onClick={() => this.resetItinerarySerice()}
               type="button"
               className="btn btn-sm btn-primary rounded"
             >
-              Resetvvv
+              Reset
             </button>
           </span>
           {this.props.TourItineraryServiceData.map((item, key) => {
