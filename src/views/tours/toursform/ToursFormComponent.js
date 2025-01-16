@@ -2380,6 +2380,10 @@ class ToursAddRecordComponent extends React.Component {
                           <ul id="Itinerary" className="dropdown-menu">
                             {this.state.AllTourItineraryData.map(
                               (item, key) => {
+                                const itemName =
+                                  item.isPrimary === true
+                                    ? `${item.name} -  Primary`
+                                    : item.name;
                                 return (
                                   <li key={`Itinerary-${key}`}>
                                     <a
@@ -2391,8 +2395,7 @@ class ToursAddRecordComponent extends React.Component {
                                         });
                                       }}
                                     >
-                                      {" "}
-                                      {item.name}
+                                      {itemName}
                                     </a>
                                   </li>
                                 );

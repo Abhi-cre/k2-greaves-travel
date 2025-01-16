@@ -6,6 +6,7 @@ import { formatDate } from "../../../vendor/datefns";
 import { DISPLAYDATEFORMATE } from "../../../helpers/constants";
 import SettingApi from "../../../api/Setting.api";
 import { USER_ID, USER_EMAIL, USER_NAME } from "../../../helpers/constants";
+import * as XLSX from "xlsx";
 
 const CostingViewComponent = (props) => {
   const [shortBy, setShortBy] = useState("cityName");
@@ -13,6 +14,8 @@ const CostingViewComponent = (props) => {
   const [costFilter, setCostFilter] = useState("withCost");
   const [tourItineraryData, setTourItineraryData] = useState([]);
   const [perPersonCost, setPerPersonCost] = useState([]);
+  const [hotelTotal, setHotelTotal] = useState([]);
+  const [singleRoomSupplement, setSingleRoomSupplement] = useState([]);
 
   const [totals, setTotals] = useState({
     totalCost: 0,
@@ -392,6 +395,184 @@ const CostingViewComponent = (props) => {
     return formatter.format(new Date(date));
   };
 
+  const calculateHotelTotals = (items) => {
+    let hotelTotalCost = 0;
+
+    items.forEach((item, index) => {
+      if (
+        ArrayHelper.getValue(item, "vendorTypeName") === "Hotel" &&
+        selectedItems.has(index)
+      ) {
+        hotelTotalCost += ArrayHelper.getValue(item, "serviceSellINR");
+      }
+    });
+
+    return hotelTotalCost / 2;
+  };
+
+  useEffect(() => {
+    const updatedTotals = calculateTotals(tourItineraryServiceList);
+    setTotals(updatedTotals);
+
+    const hotelTotal = calculateHotelTotals(tourItineraryServiceList);
+    setHotelTotal(hotelTotal);
+
+    console.log("Hotel Total:", hotelTotal);
+  }, [shortBy, props.TourItinerarySelected, selectedItems]);
+
+  const calculateSingleRoomSupplement = (
+    singleRoomCost,
+    doubleRoomCost,
+    numberOfGuests
+  ) => {
+    if (numberOfGuests === 0) return 0;
+    const perPersonDoubleRoomCost = doubleRoomCost / 2;
+
+    const singleRoomSupplement = singleRoomCost - perPersonDoubleRoomCost;
+
+    return singleRoomSupplement;
+  };
+
+  useEffect(() => {
+    const updatedTotals = calculateTotals(tourItineraryServiceList);
+    setTotals(updatedTotals);
+
+    let singleRoomSupplement = 0;
+
+    tourItineraryServiceList.forEach((item, index) => {
+      const isHotel =
+        ArrayHelper.getValue(item, "vendorTypeName") === "Hotel" &&
+        selectedItems.has(index);
+
+      if (isHotel) {
+        const singleRoomCost = ArrayHelper.getValue(item, "cost");
+        console.log(
+          singleRoomCost,
+          "singleRoomCostsingleRoomCostsingleRoomCost"
+        );
+
+        const doubleRoomCost = ArrayHelper.getValue(item, "serviceSellINR");
+        const numberOfGuests = ArrayHelper.getValue(item, "noofGuest");
+
+        const supplement = calculateSingleRoomSupplement(
+          singleRoomCost,
+          doubleRoomCost,
+          numberOfGuests
+        );
+
+        singleRoomSupplement += supplement;
+      }
+    });
+
+    console.log(singleRoomSupplement, "singleRoomSupplement");
+
+    setSingleRoomSupplement(singleRoomSupplement);
+  }, [shortBy, props.TourItinerarySelected, selectedItems]);
+
+  const exportToExcel = () => {
+    // Prepare data (assuming `tourItineraryServiceList` is the data you want to export)
+    const headers = [
+      "S No.",
+      "Date",
+      "Vendor Type",
+      "Vendor",
+      "City",
+      "Service",
+      "Rate",
+      "Unit",
+      "Duration",
+      "Cost",
+      "GTI Commission",
+      "Gross ₹",
+      "GST Amount",
+      "Sell ₹",
+      "Net $",
+      "Commission $",
+      "Credit Card Fees",
+      "USD Client $",
+      "Agent Commission",
+    ];
+
+    // Create rows of data (you can include other dynamic columns here as needed)
+    const rows = tourItineraryServiceList.map((item, key) => {
+      const serviceIdArray = ArrayHelper.getValue(item, "serviceId").split(",");
+      let serviceName = serviceIdArray
+        .map((serviceId) => {
+          return ArrayHelper.getValue(
+            props.serviceList.filter((service) => service.id == serviceId),
+            "[0].name"
+          );
+        })
+        .join(" , ");
+
+      const formattedStartDate =
+        item.startDate !== "1900-01-01T00:00:00"
+          ? formatDate(item.startDate)
+          : "";
+      const singleRoomSupplement = calculateSingleRoomSupplement(
+        ArrayHelper.getValue(item, "cost"),
+        ArrayHelper.getValue(item, "serviceSellINR"),
+        ArrayHelper.getValue(item, "noofGuest")
+      );
+
+      const CreditCardFees =
+        ArrayHelper.getValue(item, "serviceUSDClientDollar") -
+        (ArrayHelper.getValue(item, "serviceNetUSD") +
+          ArrayHelper.getValue(item, "serviceUSDCommission"));
+
+      return [
+        key + 1, // Serial number
+        formattedStartDate, // Date
+        ArrayHelper.getValue(item, "vendorTypeName"), // Vendor Type
+        ArrayHelper.getValue(item, "vendorName"), // Vendor
+        ArrayHelper.getValue(item, "cityName"), // City
+        serviceName, // Service Name
+        Number(ArrayHelper.getValue(item, "rate")).toFixed(2), // Rate
+        ArrayHelper.getValue(item, "unit"), // Unit
+        ArrayHelper.getValue(item, "startDate") !== "" &&
+        ArrayHelper.getValue(item, "endDate") !== ""
+          ? DATEDURATION(
+              ArrayHelper.getValue(item, "startDate"),
+              ArrayHelper.getValue(item, "endDate")
+            )
+          : "", // Duration
+        Number(ArrayHelper.getValue(item, "cost", 1)).toFixed(2), // Cost
+        Number(ArrayHelper.getValue(item, "serviceGTICommission")).toFixed(2), // GTI Commission
+        Number(ArrayHelper.getValue(item, "serviceGrossINR")).toFixed(2), // Gross INR
+        (
+          (ArrayHelper.getValue(item, "serviceGSTPercentage") *
+            ArrayHelper.getValue(item, "serviceGrossINR")) /
+          100
+        ).toFixed(2), // GST Amount
+        Number(ArrayHelper.getValue(item, "serviceSellINR")).toFixed(2), // Sell INR
+        Number(ArrayHelper.getValue(item, "serviceNetUSD")).toFixed(2), // Net USD
+        Number(ArrayHelper.getValue(item, "serviceUSDCommission")).toFixed(2), // Commission USD
+        Number(CreditCardFees).toFixed(2), // Credit Card Fees
+        Number(ArrayHelper.getValue(item, "serviceUSDClientDollar")).toFixed(2), // USD Client $
+        Number(ArrayHelper.getValue(item, "agentCommissionValue")).toFixed(2), // Agent Commission
+      ];
+    });
+
+    // Create a worksheet with the headers and rows
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+    // Create a workbook with the worksheet
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Tour Itinerary");
+
+    // Export the workbook to an Excel file
+    const itineraryName = ArrayHelper.getValue(
+      props.TourItinerarySelected,
+      "name"
+    );
+
+    // Sanitize the itinerary name to make it safe for file names (remove invalid characters)
+    const sanitizedItineraryName = itineraryName
+      ? itineraryName.replace(/[\/:*?"<>|]/g, "") // Removing invalid characters for filenames
+      : "Tour_Itinerary";
+    XLSX.writeFile(wb, `${sanitizedItineraryName}.xlsx`);
+  };
+
   return (
     <React.Fragment>
       <div
@@ -401,6 +582,21 @@ const CostingViewComponent = (props) => {
       >
         <h2 className="pb-3">
           {ArrayHelper.getValue(props.TourItinerarySelected, "name")}
+
+          <span className="txt-right me-2 heading floatright">
+            <br></br>
+            <img
+              style={{
+                height: "25px",
+                width: "25px",
+                cursor: "pointer",
+              }}
+              src="/images/downloadExcel.png"
+              alt="Download Excel"
+              className=""
+              onClick={exportToExcel}
+            />
+          </span>
           <span className="txt-right me-2 heading floatright">
             Sort By Costing
             <select
@@ -457,10 +653,10 @@ const CostingViewComponent = (props) => {
                     <th className="txt-right width150">Gross ₹</th>
                     <th className="txt-right width150">GST Amount</th>
                     <th className="txt-right width150">Sell ₹</th>
-                    <th className="txt-right width150">Net $</th>
-                    <th className="txt-right width150">Commission $</th>
-                    <th className="txt-right width150">Credit Card Fees</th>
-                    <th className="txt-right width150">USD Client $</th>
+                    <th className="txt-right width150">$ Net</th>
+                    <th className="txt-right width150">$ Commission</th>
+                    <th className="txt-right width150">CC Fees</th>
+                    <th className="txt-right width150">$ Client</th>
                     <th className="txt-right width150">Agent Commission</th>
                   </>
                 )}
@@ -683,12 +879,18 @@ const CostingViewComponent = (props) => {
                             })}
                           </td>
                         </tr>
-                        {/* <tr>
-                          <td className="txt-left">Single Room Supplement:</td>
+                        <tr>
+                          <td className="txt-left">
+                            Per Person on Twin Sharing:
+                            {Number(hotelTotal).toFixed(0)}
+                          </td>
                         </tr>
                         <tr>
-                          <td className="txt-left">Triple Room Reduction:</td>
-                        </tr> */}
+                          <td className="txt-left">
+                            Single Room Supplement:
+                            {Number(singleRoomSupplement).toFixed(0)}
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </th>
