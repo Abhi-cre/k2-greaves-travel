@@ -3013,21 +3013,6 @@ class TourItineraryServiceFieldComponent extends React.Component {
               </div>
             );
           })}
-          {/* <div className="d-flex mb-4">
-    <div className="flex-fill p-1" id="seviceHtmlvendorTypeId">
-        <select
-            className="form-select form-select-sm"
-            style={{ width: '150px' }}
-            value={this.state.costFilter}
-            onChange={this.handleSelectChange}
-        >
-            <option value="">Select By Cost</option>
-            <option value="withCost">With Cost</option>
-            <option value="withoutCost">Without Cost</option>
-        </select>
-    </div>
-</div>
-                 */}
           {tourItineraryService.length > 0 ? (
             <div className="table-responsive">
               <table className="table table-striped rounded border mb-0">

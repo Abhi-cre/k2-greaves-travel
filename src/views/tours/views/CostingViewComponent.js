@@ -16,6 +16,12 @@ const CostingViewComponent = (props) => {
   const [perPersonCost, setPerPersonCost] = useState([]);
   const [hotelTotal, setHotelTotal] = useState([]);
   const [singleRoomSupplement, setSingleRoomSupplement] = useState([]);
+  const [supplements, setSupplements] = useState({
+    weekdaySupplement: 0,
+    weekendSupplement: 0,
+    tripleRoomReduction: 0,
+    perPersonTwinSharing: 0,
+  });
 
   const [totals, setTotals] = useState({
     totalCost: 0,
@@ -32,10 +38,6 @@ const CostingViewComponent = (props) => {
   let tourItineraryServiceList = ArrayHelper.getValue(
     props.TourItinerarySelected,
     "tourItineraryService"
-  );
-  console.log(
-    tourItineraryServiceList,
-    "tourItineraryServiceListtourItineraryServiceList"
   );
 
   useEffect(() => {
@@ -134,7 +136,6 @@ const CostingViewComponent = (props) => {
   useEffect(() => {
     const updatedTotals = calculateTotals(tourItineraryServiceList);
     setTotals(updatedTotals);
-    // console.log(tourItineraryServiceList,"tourItineraryServiceListtourItineraryServiceList");
   }, [shortBy, props.TourItinerarySelected, selectedItems]);
 
   const calculateTotals = (items) => {
@@ -363,14 +364,14 @@ const CostingViewComponent = (props) => {
 
     SettingApi.PostSettingList(data, "/api/TourItinerary/UpdateTourItinerary")
       .then((response) => {
-        console.log("Save successful:", response);
+        // console.log("Save successful:", response);
         if (response.tourItinerary?.[0]?.tourItineraryService?.[0]?.isChecked) {
-          console.log(
-            response?.tourItinerary?.[0]?.tourItineraryService?.[0]?.isChecked
-          ); // true
-          console.log(
-            response?.tourItinerary?.[1]?.tourItineraryService?.[0]?.isChecked
-          );
+          // console.log(
+          //   response?.tourItinerary?.[0]?.tourItineraryService?.[0]?.isChecked
+          // );
+          // console.log(
+          //   response?.tourItinerary?.[1]?.tourItineraryService?.[0]?.isChecked
+          // );
         } else {
           console.log("API Response Error:", response.message);
         }
@@ -387,91 +388,91 @@ const CostingViewComponent = (props) => {
     const options = {
       weekday: "long",
       day: "2-digit",
-      month: "2-digit",
+      month: "long",
       year: "numeric",
     };
 
-    const formatter = new Intl.DateTimeFormat("en-US", options);
+    const formatter = new Intl.DateTimeFormat("en-GB", options);
     return formatter.format(new Date(date));
   };
 
-  const calculateHotelTotals = (items) => {
-    let hotelTotalCost = 0;
+  // const calculateHotelTotals = (items) => {
+  //   let hotelTotalCost = 0;
 
-    items.forEach((item, index) => {
-      if (
-        ArrayHelper.getValue(item, "vendorTypeName") === "Hotel" &&
-        selectedItems.has(index)
-      ) {
-        hotelTotalCost += ArrayHelper.getValue(item, "serviceSellINR");
-      }
-    });
+  //   items.forEach((item, index) => {
+  //     if (
+  //       ArrayHelper.getValue(item, "vendorTypeName") === "Hotel" &&
+  //       selectedItems.has(index)
+  //     ) {
+  //       hotelTotalCost += ArrayHelper.getValue(item, "serviceSellINR");
+  //     }
+  //   });
 
-    return hotelTotalCost / 2;
-  };
+  //   return hotelTotalCost / 2;
+  // };
 
-  useEffect(() => {
-    const updatedTotals = calculateTotals(tourItineraryServiceList);
-    setTotals(updatedTotals);
+  // useEffect(() => {
+  //   const updatedTotals = calculateTotals(tourItineraryServiceList);
+  //   setTotals(updatedTotals);
 
-    const hotelTotal = calculateHotelTotals(tourItineraryServiceList);
-    setHotelTotal(hotelTotal);
+  //   const hotelTotal = calculateHotelTotals(tourItineraryServiceList);
+  //   setHotelTotal(hotelTotal);
 
-    console.log("Hotel Total:", hotelTotal);
-  }, [shortBy, props.TourItinerarySelected, selectedItems]);
+  //   console.log("Hotel Total:", hotelTotal);
+  // }, [shortBy, props.TourItinerarySelected, selectedItems]);
 
-  const calculateSingleRoomSupplement = (
-    singleRoomCost,
-    doubleRoomCost,
-    numberOfGuests
-  ) => {
-    if (numberOfGuests === 0) return 0;
-    const perPersonDoubleRoomCost = doubleRoomCost / 2;
+  // const calculateSingleRoomSupplement = (
+  //   singleRoomCost,
+  //   doubleRoomCost,
+  //   numberOfGuests
+  // ) => {
+  //   if (numberOfGuests === 0) return 0;
+  //   const perPersonDoubleRoomCost = doubleRoomCost / 2;
 
-    const singleRoomSupplement = singleRoomCost - perPersonDoubleRoomCost;
+  //   const singleRoomSupplement = singleRoomCost - perPersonDoubleRoomCost;
 
-    return singleRoomSupplement;
-  };
+  //   return singleRoomSupplement;
+  // };
 
-  useEffect(() => {
-    const updatedTotals = calculateTotals(tourItineraryServiceList);
-    setTotals(updatedTotals);
+  // useEffect(() => {
+  //   const updatedTotals = calculateTotals(tourItineraryServiceList);
+  //   setTotals(updatedTotals);
 
-    let singleRoomSupplement = 0;
+  //   let singleRoomSupplement = 0;
 
-    tourItineraryServiceList.forEach((item, index) => {
-      const isHotel =
-        ArrayHelper.getValue(item, "vendorTypeName") === "Hotel" &&
-        selectedItems.has(index);
+  //   tourItineraryServiceList.forEach((item, index) => {
+  //     const isHotel =
+  //       ArrayHelper.getValue(item, "vendorTypeName") === "Hotel" &&
+  //       selectedItems.has(index);
 
-      if (isHotel) {
-        const singleRoomCost = ArrayHelper.getValue(item, "cost");
-        console.log(
-          singleRoomCost,
-          "singleRoomCostsingleRoomCostsingleRoomCost"
-        );
+  //     if (isHotel) {
+  //       const singleRoomCost = ArrayHelper.getValue(item, "cost");
+  //       console.log(
+  //         singleRoomCost,
+  //         "singleRoomCostsingleRoomCostsingleRoomCost"
+  //       );
 
-        const doubleRoomCost = ArrayHelper.getValue(item, "serviceSellINR");
-        const numberOfGuests = ArrayHelper.getValue(item, "noofGuest");
+  //       const doubleRoomCost = ArrayHelper.getValue(item, "serviceSellINR");
+  //       const numberOfGuests = ArrayHelper.getValue(item, "noofGuest");
 
-        const supplement = calculateSingleRoomSupplement(
-          singleRoomCost,
-          doubleRoomCost,
-          numberOfGuests
-        );
+  //       const supplement = calculateSingleRoomSupplement(
+  //         singleRoomCost,
+  //         doubleRoomCost,
+  //         numberOfGuests
+  //       );
 
-        singleRoomSupplement += supplement;
-      }
-    });
+  //       singleRoomSupplement += supplement;
+  //     }
+  //   });
 
-    console.log(singleRoomSupplement, "singleRoomSupplement");
+  //   console.log(singleRoomSupplement, "singleRoomSupplement");
 
-    setSingleRoomSupplement(singleRoomSupplement);
-  }, [shortBy, props.TourItinerarySelected, selectedItems]);
+  //   setSingleRoomSupplement(singleRoomSupplement);
+  // }, [shortBy, props.TourItinerarySelected, selectedItems]);
 
   const exportToExcel = () => {
-    // Prepare data (assuming `tourItineraryServiceList` is the data you want to export)
-    const headers = [
+    const withCost = costFilter === "withCost";
+    const headersWithCost = [
       "S No.",
       "Date",
       "Vendor Type",
@@ -486,92 +487,205 @@ const CostingViewComponent = (props) => {
       "Gross ₹",
       "GST Amount",
       "Sell ₹",
-      "Net $",
+      "$ Net",
       "Commission $",
-      "Credit Card Fees",
-      "USD Client $",
+      "CC Fees",
+      "$ Client",
       "Agent Commission",
     ];
 
-    // Create rows of data (you can include other dynamic columns here as needed)
-    const rows = tourItineraryServiceList.map((item, key) => {
-      const serviceIdArray = ArrayHelper.getValue(item, "serviceId").split(",");
+    const headersWithoutCost = [
+      "S No.",
+      "Date",
+      "Vendor Type",
+      "City",
+      "Remarks",
+    ];
+
+    const selectedItemsData = tourItineraryServiceList.filter((item, index) =>
+      selectedItems.has(index)
+    );
+
+    let filteredData = withCost
+      ? selectedItemsData.filter(
+          (item) => ArrayHelper.getValue(item, "cost") > 0
+        )
+      : selectedItemsData.filter(
+          (item) => ArrayHelper.getValue(item, "cost") === 0
+        );
+
+    const rows = filteredData.map((item, key) => {
+      let serviceIdArray = ArrayHelper.getValue(item, "serviceId").split(",");
       let serviceName = serviceIdArray
         .map((serviceId) => {
-          return ArrayHelper.getValue(
-            props.serviceList.filter((service) => service.id == serviceId),
-            "[0].name"
-          );
+          const service = props.serviceList.find((_it) => _it.id == serviceId);
+          return service ? service.name : "";
         })
+        .filter((name) => name)
         .join(" , ");
 
       const formattedStartDate =
         item.startDate !== "1900-01-01T00:00:00"
           ? formatDate(item.startDate)
           : "";
-      const singleRoomSupplement = calculateSingleRoomSupplement(
-        ArrayHelper.getValue(item, "cost"),
-        ArrayHelper.getValue(item, "serviceSellINR"),
-        ArrayHelper.getValue(item, "noofGuest")
-      );
+
+      const cityName = ArrayHelper.getValue(item, "cityName", "");
 
       const CreditCardFees =
         ArrayHelper.getValue(item, "serviceUSDClientDollar") -
         (ArrayHelper.getValue(item, "serviceNetUSD") +
           ArrayHelper.getValue(item, "serviceUSDCommission"));
 
-      return [
-        key + 1, // Serial number
-        formattedStartDate, // Date
-        ArrayHelper.getValue(item, "vendorTypeName"), // Vendor Type
-        ArrayHelper.getValue(item, "vendorName"), // Vendor
-        ArrayHelper.getValue(item, "cityName"), // City
-        serviceName, // Service Name
-        Number(ArrayHelper.getValue(item, "rate")).toFixed(2), // Rate
-        ArrayHelper.getValue(item, "unit"), // Unit
-        ArrayHelper.getValue(item, "startDate") !== "" &&
-        ArrayHelper.getValue(item, "endDate") !== ""
-          ? DATEDURATION(
-              ArrayHelper.getValue(item, "startDate"),
-              ArrayHelper.getValue(item, "endDate")
-            )
-          : "", // Duration
-        Number(ArrayHelper.getValue(item, "cost", 1)).toFixed(2), // Cost
-        Number(ArrayHelper.getValue(item, "serviceGTICommission")).toFixed(2), // GTI Commission
-        Number(ArrayHelper.getValue(item, "serviceGrossINR")).toFixed(2), // Gross INR
-        (
-          (ArrayHelper.getValue(item, "serviceGSTPercentage") *
-            ArrayHelper.getValue(item, "serviceGrossINR")) /
-          100
-        ).toFixed(2), // GST Amount
-        Number(ArrayHelper.getValue(item, "serviceSellINR")).toFixed(2), // Sell INR
-        Number(ArrayHelper.getValue(item, "serviceNetUSD")).toFixed(2), // Net USD
-        Number(ArrayHelper.getValue(item, "serviceUSDCommission")).toFixed(2), // Commission USD
-        Number(CreditCardFees).toFixed(2), // Credit Card Fees
-        Number(ArrayHelper.getValue(item, "serviceUSDClientDollar")).toFixed(2), // USD Client $
-        Number(ArrayHelper.getValue(item, "agentCommissionValue")).toFixed(2), // Agent Commission
+      const rowData = [
+        key + 1,
+        formattedStartDate,
+        ArrayHelper.getValue(item, "vendorTypeName"),
+        cityName,
+        ArrayHelper.getValue(item, "description"),
       ];
+
+      if (withCost) {
+        rowData.push(
+          serviceName,
+          Number(ArrayHelper.getValue(item, "rate")).toFixed(2),
+          ArrayHelper.getValue(item, "unit"),
+          ArrayHelper.getValue(item, "startDate") !== "" &&
+            ArrayHelper.getValue(item, "endDate") !== ""
+            ? DATEDURATION(
+                ArrayHelper.getValue(item, "startDate"),
+                ArrayHelper.getValue(item, "endDate")
+              )
+            : "",
+          Number(ArrayHelper.getValue(item, "cost", 1)).toFixed(2),
+          Number(ArrayHelper.getValue(item, "serviceGTICommission")).toFixed(2),
+          Number(ArrayHelper.getValue(item, "serviceGrossINR")).toFixed(2),
+          (
+            (ArrayHelper.getValue(item, "serviceGSTPercentage") *
+              ArrayHelper.getValue(item, "serviceGrossINR")) /
+            100
+          ).toFixed(2),
+          Number(ArrayHelper.getValue(item, "serviceSellINR")).toFixed(2),
+          Number(ArrayHelper.getValue(item, "serviceNetUSD")).toFixed(2),
+          Number(ArrayHelper.getValue(item, "serviceUSDCommission")).toFixed(2),
+          Number(CreditCardFees).toFixed(2),
+          Number(ArrayHelper.getValue(item, "serviceUSDClientDollar")).toFixed(
+            2
+          ),
+          Number(ArrayHelper.getValue(item, "agentCommissionValue")).toFixed(2)
+        );
+      } else {
+        rowData.push(ArrayHelper.getValue(item, "remarks") || "");
+      }
+
+      return rowData;
     });
 
-    // Create a worksheet with the headers and rows
+    const headers = withCost ? headersWithCost : headersWithoutCost;
+
     const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
 
-    // Create a workbook with the worksheet
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Tour Itinerary");
 
-    // Export the workbook to an Excel file
     const itineraryName = ArrayHelper.getValue(
       props.TourItinerarySelected,
       "name"
     );
-
-    // Sanitize the itinerary name to make it safe for file names (remove invalid characters)
     const sanitizedItineraryName = itineraryName
-      ? itineraryName.replace(/[\/:*?"<>|]/g, "") // Removing invalid characters for filenames
+      ? itineraryName.replace(/[\/:*?"<>|]/g, "")
       : "Tour_Itinerary";
+
     XLSX.writeFile(wb, `${sanitizedItineraryName}.xlsx`);
   };
+
+  const getHotelList = () => {
+    let tourItineraryServiceList = ArrayHelper.getValue(
+      props.TourItinerarySelected,
+      "tourItineraryService"
+    );
+
+    if (tourItineraryServiceList && tourItineraryServiceList.length > 0) {
+      const itineraryId = tourItineraryServiceList[0].itineraryId;
+
+      const data = {
+        requestedUserId: parseInt(localStorage.getItem(USER_ID)),
+        tourItineraryId: itineraryId,
+      };
+
+      SettingApi.PostSettingList(
+        data,
+        "/api/ItineraryDay/SelectedItineraryInfo"
+      )
+        .then((response) => {
+          if (response.isSuccess === true) {
+            const selectedItineraryModels = response.selectedItineraryModels;
+
+            if (Array.isArray(selectedItineraryModels)) {
+              let weekdaySupplement = 0;
+              let weekendSupplement = 0;
+              let tripleRoomReduction = 0;
+              let perPersonTwinSharing = 0;
+
+              selectedItineraryModels.forEach((itinerary) => {
+                const {
+                  weekdayRateSingle,
+                  weekdayRateDouble,
+                  weekendRateSingle,
+                  weekendRateDouble,
+                  extraAdult12Above,
+                  extraAdultUpto12,
+                } = itinerary;
+
+                const extraBedCost = extraAdult12Above + extraAdultUpto12;
+
+                weekdaySupplement += weekdayRateSingle - weekdayRateDouble / 2;
+                weekendSupplement += weekendRateSingle - weekendRateDouble / 2;
+
+                const tripleRoomReductionForItinerary =
+                  (weekdayRateDouble + extraBedCost) / 3 -
+                  weekdayRateDouble / 2;
+
+                tripleRoomReduction += tripleRoomReductionForItinerary;
+
+                const perPerson = weekdayRateDouble / 2;
+                console.log(perPerson, "perPerson-2122");
+
+                perPersonTwinSharing = perPerson;
+                console.log(
+                  perPersonTwinSharing,
+                  "perPersonTwinSharing-=-perPersonTwinSharing"
+                );
+              });
+
+              setSupplements({
+                weekdaySupplement,
+                weekendSupplement,
+                tripleRoomReduction,
+                perPersonTwinSharing,
+              });
+            } else {
+              console.error(
+                "selectedItineraryModels is not an array or is missing"
+              );
+            }
+          } else {
+            console.log("API Response Error:", response.message);
+          }
+        })
+        .catch((error) => {
+          console.error(
+            "Error saving:",
+            error.response ? error.response : "error"
+          );
+        });
+    } else {
+      console.error("Tour Itinerary Service List is empty or not available.");
+    }
+  };
+
+  useEffect(() => {
+    getHotelList();
+  });
 
   return (
     <React.Fragment>
@@ -583,7 +697,7 @@ const CostingViewComponent = (props) => {
         <h2 className="pb-3">
           {ArrayHelper.getValue(props.TourItinerarySelected, "name")}
 
-          <span className="txt-right me-2 heading floatright">
+          {/* <span className="txt-right me-2 heading floatright">
             <br></br>
             <img
               style={{
@@ -621,13 +735,69 @@ const CostingViewComponent = (props) => {
               <option value="vendorName">Vendor</option>
               <option value="startDate">Date</option>
             </select>
-          </span>
+          </span> */}
+
+          <div class="container">
+            <div
+              class="row justify-content-end align-items-center"
+              style={{ marginRight: "-17%" }}
+            >
+              <div class="col-auto">
+                <label for="text1" className="mb-0">
+                  Sort By
+                </label>
+              </div>
+              <br />
+              <div className="col-auto">
+                <select
+                  name="sortBy"
+                  className="form-select form-select-sm"
+                  onChange={(e) => setShortBy(e.target.value)}
+                >
+                  <option value="cityName">City</option>
+                  <option value="vendorTypeName">Vendor Type</option>
+                  <option value="vendorName">Vendor</option>
+                  <option value="startDate">Date</option>
+                </select>
+              </div>
+
+              <div class="col-auto">
+                <label for="text2">Sort By Costing</label>
+              </div>
+              <div className="col-auto">
+                <select
+                  name="costFilter"
+                  className="form-select form-select-sm"
+                  value={costFilter}
+                  onChange={(e) => setCostFilter(e.target.value)}
+                >
+                  <option value="withCost">With Cost</option>
+                  <option value="withoutCost">Without Cost</option>
+                </select>
+              </div>
+              <div className="col-auto">
+                <img
+                  style={{
+                    height: "25px",
+                    width: "25px",
+                    cursor: "pointer",
+                  }}
+                  src="/images/downloadExcel.png"
+                  alt="Download Excel"
+                  className=""
+                  onClick={exportToExcel}
+                />
+              </div>
+            </div>
+          </div>
         </h2>
         {tourItineraryServiceList.length > 0 ? (
           <table className="table table-striped rounded border">
             <thead>
               <tr>
-                <th className="width50">Select</th>
+                {costFilter !== "withoutCost" && (
+                  <th className="width50">Select</th>
+                )}
 
                 <th className="width50">S No.</th>
                 <th>Date</th>
@@ -636,7 +806,7 @@ const CostingViewComponent = (props) => {
                 {costFilter === "withoutCost" ? (
                   <>
                     <th className="txt-right ">City</th>
-                    <th className="txt-right ">Date</th>
+                    {/* <th className="txt-right ">Date</th> */}
 
                     <th className="txt-right ">Remarks</th>
                   </>
@@ -711,14 +881,17 @@ const CostingViewComponent = (props) => {
 
                 return (
                   <tr key={`toursList-${key}`}>
-                    <td className="txt-center">
-                      <input
-                        type="checkbox"
-                        name={`checkbox-${key}`}
-                        checked={selectedItems.has(key)}
-                        onChange={() => handleCheckboxChange(key, item)}
-                      />
-                    </td>
+                    {costFilter !== "withoutCost" && (
+                      <td className="txt-center">
+                        <input
+                          type="checkbox"
+                          name={`checkbox-${key}`}
+                          checked={selectedItems.has(key)}
+                          onChange={() => handleCheckboxChange(key, item)}
+                        />
+                      </td>
+                    )}
+
                     <td>{key + 1}</td>
                     <td>{formattedStartDate}</td>
                     <td>{ArrayHelper.getValue(item, "vendorTypeName")}</td>
@@ -727,7 +900,7 @@ const CostingViewComponent = (props) => {
 
                     {costFilter === "withoutCost" ? (
                       <>
-                        <th>{ArrayHelper.getValue(item, "startDate")}</th>
+                        {/* <th>{ArrayHelper.getValue(item, "startDate")}</th> */}
 
                         <th>{ArrayHelper.getValue(item, "description")}</th>
                       </>
@@ -853,7 +1026,7 @@ const CostingViewComponent = (props) => {
                 " "
               )}
 
-              {costFilter === "withCost" && perPersonCost.length > 0 && (
+              {costFilter !== "withoutCost" && perPersonCost.length > 0 && (
                 <tr>
                   <th colSpan={16}></th>
                   <th colSpan={4}>
@@ -881,14 +1054,20 @@ const CostingViewComponent = (props) => {
                         </tr>
                         <tr>
                           <td className="txt-left">
-                            Per Person on Twin Sharing:
-                            {Number(hotelTotal).toFixed(0)}
+                            Per Person on Twin Sharing: ₹
+                            {supplements.perPersonTwinSharing.toFixed(0)}
                           </td>
                         </tr>
                         <tr>
                           <td className="txt-left">
-                            Single Room Supplement:
-                            {Number(singleRoomSupplement).toFixed(0)}
+                            Single Room Supplement:{" "}
+                            {`₹${supplements.weekdaySupplement}`}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Triple Room Reduction:
+                            {`₹${supplements.tripleRoomReduction.toFixed(0)}`}
                           </td>
                         </tr>
                       </tbody>
