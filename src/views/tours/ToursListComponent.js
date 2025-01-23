@@ -433,7 +433,7 @@ class ToursListComponent extends React.Component {
                             {ArrayHelper.getValue(item, "tourStartDate")
                               ? formatDate(
                                   ArrayHelper.getValue(item, "tourStartDate"),
-                                  "dd MMM yyyy"
+                                  "EEEE, dd MMMM yyyy"
                                 )
                               : ""}
                           </td>
@@ -441,7 +441,7 @@ class ToursListComponent extends React.Component {
                             {ArrayHelper.getValue(item, "tourEndDate")
                               ? formatDate(
                                   ArrayHelper.getValue(item, "tourEndDate"),
-                                  "dd MMM yyyy"
+                                  "EEEE, dd MMMM yyyy"
                                 )
                               : ""}
                           </td>

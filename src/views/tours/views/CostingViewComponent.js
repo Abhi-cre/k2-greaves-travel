@@ -92,15 +92,32 @@ const CostingViewComponent = (props) => {
     setTotals(newTotals);
   }, [shortBy, props.TourItinerarySelected, tourItineraryServiceList]);
 
-  if (costFilter === "withCost") {
-    tourItineraryServiceList = tourItineraryServiceList.filter(
-      (item) => ArrayHelper.getValue(item, "cost") > 0
-    );
-  } else if (costFilter === "withoutCost") {
-    tourItineraryServiceList = tourItineraryServiceList.filter(
-      (item) => ArrayHelper.getValue(item, "cost") === 0
-    );
-  }
+  // if (costFilter === "withCost") {
+  //   tourItineraryServiceList = tourItineraryServiceList.filter(
+  //     (item) => ArrayHelper.getValue(item, "cost") > 0
+  //   );
+  // } else if (costFilter === "withoutCost") {
+  //   tourItineraryServiceList = tourItineraryServiceList.filter(
+  //     (item) => ArrayHelper.getValue(item, "cost") === 0
+  //   );
+  // }
+
+  // if (Array.isArray(tourItineraryServiceList)) {
+  //   if (costFilter === "withCost") {
+  //     tourItineraryServiceList = tourItineraryServiceList.filter(
+  //       (item) => ArrayHelper.getValue(item, "cost") > 0
+  //     );
+  //   } else if (costFilter === "withoutCost") {
+  //     tourItineraryServiceList = tourItineraryServiceList.filter(
+  //       (item) => ArrayHelper.getValue(item, "cost") === 0
+  //     );
+  //   }
+  // } else {
+  //   console.error(
+  //     "tourItineraryServiceList is not an array:",
+  //     tourItineraryServiceList
+  //   );
+  // }
 
   if (shortBy === "cityName") {
     tourItineraryServiceList = orderBy(
@@ -685,7 +702,7 @@ const CostingViewComponent = (props) => {
 
   useEffect(() => {
     getHotelList();
-  });
+  }, []);
 
   return (
     <React.Fragment>

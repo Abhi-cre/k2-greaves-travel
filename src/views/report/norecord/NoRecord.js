@@ -4,6 +4,7 @@ import PaginationComponent from "../../../components/PaginationComponent";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExcelDownloadButton from "../../../components/ExcelDownloadButton";
 import * as XLSX from "xlsx";
+import LoaderComponent from "../../../components/LoaderComponent";
 
 const ActionTypeComponent = () => {
   const [tourData, setTourData] = useState([]);
@@ -30,6 +31,8 @@ const ActionTypeComponent = () => {
 
   useEffect(() => {
     const getActionTypeList = async () => {
+      setLoader(true);
+
       try {
         const response = await SettingApi.GetSettingList(
           "/api/TourRecord/TourRecordNoItinerary"
@@ -91,6 +94,7 @@ const ActionTypeComponent = () => {
 
   return (
     <>
+      <LoaderComponent loader={loader} />
       <div
         className="tab-pane fade show active"
         id="AgentType-tab-pane"
