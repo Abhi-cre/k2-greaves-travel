@@ -18,6 +18,9 @@ import {
 } from "../../../helpers/constants";
 import "react-widgets/styles.css";
 import { algo } from "crypto-js";
+import SettingApi from "../../../api/Setting.api";
+import { Select, Spin, Input } from "antd";
+const { Option } = Select;
 // import DropdownList from "react-widgets/DropdownList";
 declare var $;
 
@@ -42,6 +45,10 @@ class TourItineraryServiceFieldComponent extends React.Component {
       selectedKey: null,
       actionType: "",
       displayType: "byCost",
+      cityId: "",
+      data: [],
+      selectedState: "",
+      selectedCountry: "",
     };
   }
 
@@ -778,6 +785,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
       ),
     });
   }
+
   handleItineraryServiceInput(index: number, key: string, value: any) {
     this.setState({
       TourItineraryServiceData: this.props.TourItineraryServiceData.map(
@@ -859,8 +867,6 @@ class TourItineraryServiceFieldComponent extends React.Component {
               key == "stateId" ||
               key == "vendorId"
             ) {
-              // item[key] = parseFloat(value).toFixed(2);
-
               if (item["startDate"] == "") {
                 item[key] = "";
                 this.setState({ selectedServices: [] });
@@ -982,7 +988,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
               key == "agentCommissionByPercentage"
             ) {
               item[key] = value.slice(0, 5);
-              // item[key] = parseFloat(value).toFixed(2);
+
               if (item["rate"] == "" || item["rate"] == 0) {
                 item[key] = "";
                 alert("Please enter value rate");
@@ -991,15 +997,11 @@ class TourItineraryServiceFieldComponent extends React.Component {
                 alert("Please enter value cost");
               } else if (value < 99.99) {
                 item[key] = value;
-                // let serviceGTICommission= parseFloat((item['cost']*value)/100).toFixed(2);
-                //     item['serviceGTICommission'] = serviceGTICommission ;
-                //     item['serviceGrossINR'] = (parseFloat(serviceGTICommission) + parseFloat(item['cost'])).toFixed(2);;
               } else {
                 alert("Please enter value than 99.99");
                 item[key] = "";
               }
             } else if (key == "markupAmount") {
-              // item[key] = parseFloat(value).toFixed(2);
               if (item["rate"] == "" || item["rate"] == 0) {
                 item[key] = "";
                 alert("Please enter value rate");
@@ -1016,7 +1018,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
               }
             } else if (key == "serviceGSTPercentage") {
               item[key] = value.slice(0, 3);
-              // item[key] = parseFloat(value).toFixed(2);
+
               if (
                 item["serviceGrossINR"] == "" ||
                 item["serviceGrossINR"] == 0
@@ -1030,7 +1032,6 @@ class TourItineraryServiceFieldComponent extends React.Component {
                 item[key] = "";
               }
             } else if (key == "serviceSellINR") {
-              // item[key] = parseFloat(value).toFixed(2);
               if (
                 item["serviceGrossINR"] == "" ||
                 item["serviceGrossINR"] == 0
@@ -1064,7 +1065,6 @@ class TourItineraryServiceFieldComponent extends React.Component {
                 item[key] = "";
               }
             } else if (key == "serviceUSDMarkUpAmount") {
-              // item[key] = parseFloat(value).toFixed(2);
               if (item["serviceNetUSD"] == "" || item["serviceNetUSD"] == 0) {
                 alert("Please enter value of  Net USD");
               } else {
@@ -1094,11 +1094,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
               }
 
               item[key] = value;
-              // item['countryId'] = '0';
-              // item['cityId'] = '0';
-              // item['stateId'] = '0';
-              // item['vendorId'] = '0';
-              // item['serviceId'] = '0';
+
               item["rate"] = 0.0;
               item["unit"] = 1;
               item["cost"] = 0.0;
@@ -1140,8 +1136,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
               item["agentCommissionByPercentage"] =
                 this.props.itineraryAgentAmount;
               item["serviceUSDMarkUpAmount"] = 0.0;
-              // item['startDate'] = '';
-              // item['endDate'] = '';
+
               item["vendorList"] = [];
               item["serviceList"] = [];
 
@@ -1221,8 +1216,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
                 item["rate"] = ArrayHelper.getValue(serviceFeeList, "[0].rate");
                 item["unit"] = 1;
                 item["cost"] = ArrayHelper.getValue(serviceFeeList, "[0].cost");
-                //item['markupPercentage'] = ArrayHelper.getValue(serviceFeeList,'[0].markupPercentage')
-                //item['markupAmount'] = ArrayHelper.getValue(serviceFeeList,'[0].markupAmount');
+
                 item["mealPlan"] = ArrayHelper.getValue(
                   serviceFeeList,
                   "[0].mealPlan"
@@ -1240,16 +1234,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
                   ) == 0 &&
                   ArrayHelper.getValue(serviceFeeList, "[0].markupAmount") != 0
                 ) {
-                  //item['commissionType']='byAmount';
-                  // item['commissionTypeUS']='byAmount';
-                  // item['serviceGTICommission'] = ArrayHelper.getValue(serviceFeeList,'[0].markupAmount') ;
-                  //  item['serviceGrossINR'] = ArrayHelper.getValue(serviceFeeList,'[0].markupAmount') + ArrayHelper.getValue(serviceFeeList,'[0].markupAmount');
                 } else {
-                  //let serviceGTICommission= (ArrayHelper.getValue(serviceFeeList,'[0].cost')*ArrayHelper.getValue(serviceFeeList,'[0].markupPercentage'))/100
-                  // item['commissionType']='byPercentage';
-                  //  item['commissionTypeUS']='byPercentage';
-                  // item['serviceGTICommission'] = serviceGTICommission ;
-                  // item['serviceGrossINR'] = serviceGTICommission +ArrayHelper.getValue(serviceFeeList,'[0].cost');
                 }
                 if (item["vendorTypeId"] == 1) {
                   if (
@@ -1344,7 +1329,16 @@ class TourItineraryServiceFieldComponent extends React.Component {
   }
 
   submitItinerarySerice() {
+    console.log(
+      "TourItineraryServiceData before submission:",
+      this.props.TourItineraryServiceData
+    );
+    console.log(
+      "City ID in submitItinerarySerice:",
+      this.props.TourItineraryServiceData[0]?.cityId
+    );
     let error = "";
+
     if (error == "" && this.props.ItineraryData.name == "") {
       alert("Please provide the Itinerary Name.");
       error = "yes";
@@ -1376,6 +1370,15 @@ class TourItineraryServiceFieldComponent extends React.Component {
         this.props.TourItineraryServiceData[0].cityId == "0") &&
       this.props.TourItineraryServiceData[0].vendorTypeId != "5"
     ) {
+      console.log(
+        "TourItineraryServiceData before submission:",
+        this.props.TourItineraryServiceData
+      );
+      console.log(
+        "City ID in submitItinerarySerice:",
+        this.props.TourItineraryServiceData[0]?.cityId
+      );
+
       alert("Please provide the city.");
       error = "yes";
     } else if (
@@ -1550,7 +1553,14 @@ class TourItineraryServiceFieldComponent extends React.Component {
   }
   resetItinerarySerice() {
     this.props.resetItinerarySerice();
-    this.setState({ selectedKey: "", actionType: "add", serviceFeeList: [] });
+    this.setState({
+      selectedKey: "",
+      actionType: "add",
+      serviceFeeList: [],
+      selectedState: [],
+      cityId: [],
+      selectedCountry: [],
+    });
   }
   componentDidMount() {
     //    this.showDate();
@@ -1620,6 +1630,101 @@ class TourItineraryServiceFieldComponent extends React.Component {
     const value = event.target.value;
     this.setState({ costFilter: value });
   };
+  getCitySuggestions = async (value) => {
+    this.setState({ loading: true, cityId: value });
+    try {
+      let response = await SettingApi.GetSettingList(
+        `/api/City/AutoCompleteCity?searchcity=${value}`
+      );
+      console.log(value, "value-=-=-");
+
+      console.log("API Response:", response); // Log the full response
+
+      if (ArrayHelper.getValue(response, "isSuccess") === true) {
+        this.setState({
+          data: response.cities, // Use the correct data array from the response
+        });
+      } else {
+        this.setState({
+          data: [],
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching city suggestions", error);
+      this.setState({
+        data: [],
+      });
+    } finally {
+      this.setState({ loading: false });
+    }
+  };
+
+  handleSearch = (value) => {
+    if (value) {
+      this.getCitySuggestions(value);
+    } else {
+      this.setState({ data: [] });
+    }
+  };
+
+  handleCityChange = (value, option, index) => {
+    console.log("Selected value:", value);
+    console.log("Selected option:", option);
+    console.log("Selected index:", index);
+    console.log("Available cities:", this.state.data);
+
+    console.log(
+      "TourItineraryServiceData before update:",
+      this.props.TourItineraryServiceData
+    );
+
+    // Find the selected city by name
+    const selectedCity = this.state.data.find(
+      (city) => city.cityName === value
+    );
+
+    if (selectedCity) {
+      console.log("City found:", selectedCity);
+
+      // Create a copy of the TourItineraryServiceData to update it
+      const updatedServiceData = [...this.props.TourItineraryServiceData];
+
+      // Check if the array is empty or index is invalid
+      if (updatedServiceData.length === 0 || !updatedServiceData[index]) {
+        console.error("Invalid index or empty data, can't update.");
+      } else {
+        // Update the cityId in the selected itinerary
+        updatedServiceData[index] = {
+          ...updatedServiceData[index],
+          cityId: selectedCity.cityId, // Update cityId with the selected city's ID
+          cityName: selectedCity.cityName, // Ensure cityName is also updated
+          stateId: selectedCity.stateId, // Update stateId with the selected city's stateId
+          stateName: selectedCity.stateName, // Update stateName
+          countryId: selectedCity.countryId, // Update countryId
+          countryName: selectedCity.countryName, // Update countryName
+        };
+
+        console.log("Updated data in handleCityChange:", updatedServiceData);
+
+        this.setState(
+          {
+            TourItineraryServiceData: updatedServiceData,
+            cityId: selectedCity.cityId, // Store the correct cityId in local state
+            selectedCityId: selectedCity.cityId,
+            selectedState: selectedCity.stateName,
+            selectedCountry: selectedCity.countryName,
+          },
+          () => {
+            // This callback is triggered after the state has been updated
+            console.log("Updated state after setState:", this.state);
+          }
+        );
+      }
+    } else {
+      console.error("Selected city not found.");
+      alert("City not found, please select a valid city.");
+    }
+  };
 
   render() {
     let tourItineraryService =
@@ -1636,7 +1741,8 @@ class TourItineraryServiceFieldComponent extends React.Component {
                 VENDORTYPEIDBYDATE ||
               ArrayHelper.getValue(item, "vendorTypeId") == ROUNTINGVENDOR
           );
-
+    const { data, loading, cityId, selectedState, selectedCountry } =
+      this.state;
     return (
       <React.Fragment>
         <div
@@ -1804,75 +1910,12 @@ class TourItineraryServiceFieldComponent extends React.Component {
                   ) : (
                     ""
                   )}
-                  {item.vendorTypeId != 5 ? (
-                    <div className="flex-fill p-1" id="seviceHtmlcountryId">
-                      <label className="form-label">Country</label>
 
-                      <select
-                        className="form-select form-select-sm"
-                        value={item.countryId}
-                        onChange={(event: any) =>
-                          this.handleItineraryServiceInput(
-                            0,
-                            "countryId",
-                            event.currentTarget.value
-                          )
-                        }
-                      >
-                        <option value="">Select Country</option>
-                        {this.props.countryList.map((item, key) => {
-                          return (
-                            <option
-                              key={`countryList-${key}`}
-                              value={ArrayHelper.getValue(item, "countryId")}
-                            >
-                              {ArrayHelper.getValue(item, "countryName")}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  {item.vendorTypeId != 5 ? (
-                    <div className="flex-fill p-1" id="seviceHtmlstateId">
-                      <label className="form-label">State</label>
-
-                      <select
-                        className="form-select form-select-sm"
-                        value={item.stateId}
-                        onChange={(event: any) =>
-                          this.handleItineraryServiceInput(
-                            0,
-                            "stateId",
-                            event.currentTarget.value
-                          )
-                        }
-                      >
-                        <option value="">Select State</option>
-                        {this.props.stateList
-                          .filter((_it) => _it.countryId == item.countryId)
-                          .map((item, key) => {
-                            return (
-                              <option
-                                key={`stateList-${key}`}
-                                value={ArrayHelper.getValue(item, "stateId")}
-                              >
-                                {ArrayHelper.getValue(item, "stateName")}
-                              </option>
-                            );
-                          })}
-                      </select>
-                    </div>
-                  ) : (
-                    ""
-                  )}
                   {item.vendorTypeId != 5 ? (
                     <div className="flex-fill p-1" id="seviceHtmlcityId">
                       <label className="form-label">City</label>
 
-                      <select
+                      {/* <select
                         className="form-select form-select-sm"
                         value={item.cityId}
                         onChange={(event: any) =>
@@ -1896,7 +1939,103 @@ class TourItineraryServiceFieldComponent extends React.Component {
                               </option>
                             );
                           })}
-                      </select>
+                      </select> */}
+
+                      <Select
+                        showSearch
+                        value={cityId}
+                        placeholder="Search for city"
+                        notFoundContent={loading ? <Spin size="small" /> : null}
+                        onSearch={this.handleSearch}
+                        onChange={(value, option) =>
+                          this.handleCityChange(value, option, option.key)
+                        } // Ensure you pass the correct index here
+                        filterOption={false}
+                        style={{ width: "100%" }}
+                      >
+                        {data.map((city, index) => (
+                          <Option key={index} value={city.cityName}>
+                            {city.cityName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {item.vendorTypeId != 5 ? (
+                    <div className="flex-fill p-1" id="seviceHtmlstateId">
+                      <label className="form-label">State</label>
+
+                      {/* <select
+                        className="form-select form-select-sm"
+                        value={item.stateId}
+                        onChange={(event: any) =>
+                          this.handleItineraryServiceInput(
+                            0,
+                            "stateId",
+                            event.currentTarget.value
+                          )
+                        }
+                      >
+                        <option value="">Select State</option>
+                        {this.props.stateList
+                          .filter((_it) => _it.countryId == item.countryId)
+                          .map((item, key) => {
+                            return (
+                              <option
+                                key={`stateList-${key}`}
+                                value={ArrayHelper.getValue(item, "stateId")}
+                              >
+                                {ArrayHelper.getValue(item, "stateName")}
+                              </option>
+                            );
+                          })}
+                      </select> */}
+                      <Input
+                        value={selectedState}
+                        placeholder="State"
+                        readOnly
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {item.vendorTypeId != 5 ? (
+                    <div className="flex-fill p-1" id="seviceHtmlcountryId">
+                      <label className="form-label">Country</label>
+
+                      <Input
+                        value={selectedCountry}
+                        placeholder="State"
+                        readOnly
+                      />
+
+                      {/* <select
+                        className="form-select form-select-sm"
+                        value={item.countryId}
+                        onChange={(event: any) =>
+                          this.handleItineraryServiceInput(
+                            0,
+                            "countryId",
+                            event.currentTarget.value
+                          )
+                        }
+                      >
+                        <option value="">Select Country</option>
+                        {this.props.countryList.map((item, key) => {
+                          return (
+                            <option
+                              key={`countryList-${key}`}
+                              value={ArrayHelper.getValue(item, "countryId")}
+                            >
+                              {ArrayHelper.getValue(item, "countryName")}
+                            </option>
+                          );
+                        })}
+                      </select> */}
                     </div>
                   ) : (
                     ""
