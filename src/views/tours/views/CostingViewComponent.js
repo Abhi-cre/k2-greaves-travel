@@ -39,6 +39,10 @@ const CostingViewComponent = (props) => {
     props.TourItinerarySelected,
     "tourItineraryService"
   );
+  console.log(
+    tourItineraryServiceList,
+    "tourItineraryServiceListtourItineraryServiceListtourItineraryServiceList"
+  );
 
   useEffect(() => {
     const allSelectedItems = new Set();
@@ -704,6 +708,14 @@ const CostingViewComponent = (props) => {
     getHotelList();
   }, []);
 
+  const updatedCostFilter = (vendorTypeName) => {
+    if (vendorTypeName === "Routing" || vendorTypeName === "By Date") {
+      return "withoutCost";
+    } else {
+      return "withCost";
+    }
+  };
+
   return (
     <React.Fragment>
       <div
@@ -850,157 +862,173 @@ const CostingViewComponent = (props) => {
               </tr>
             </thead>
             <tbody>
-              {tourItineraryServiceList.map((item, key) => {
-                let serviceIdArray = ArrayHelper.getValue(
-                  item,
-                  "serviceId"
-                ).split(",");
-                let serviceName = "";
-
-                for (let z = 0; z < serviceIdArray.length; z++) {
-                  if (z > 0) {
-                    serviceName = serviceName + "  ,  ";
-                  }
-                  serviceName =
-                    serviceName +
-                    ArrayHelper.getValue(
-                      props.serviceList.filter(
-                        (_it) => _it.id == serviceIdArray[z]
-                      ),
-                      "[0].name"
-                    );
-                }
-                if (item.startDate === "1900-01-01T00:00:00") {
-                  item.startDate = "";
-                } else if (item.startDate !== "") {
-                  item.startDate = formatDate(
-                    item.startDate,
-                    DISPLAYDATEFORMATE
+              {tourItineraryServiceList
+                .filter((item) => {
+                  const currentCostFilter = updatedCostFilter(
+                    item.vendorTypeName
                   );
-                }
+                  return costFilter === "withCost"
+                    ? currentCostFilter === "withCost"
+                    : currentCostFilter === "withoutCost";
+                })
+                .map((item, key) => {
+                  let serviceIdArray = ArrayHelper.getValue(
+                    item,
+                    "serviceId"
+                  ).split(",");
+                  let serviceName = "";
 
-                if (item.endDate === "1900-01-01T00:00:00") {
-                  item.endDate = "";
-                } else if (item.endDate !== "") {
-                  item.endDate = formatDate(item.endDate, DISPLAYDATEFORMATE);
-                }
+                  for (let z = 0; z < serviceIdArray.length; z++) {
+                    if (z > 0) {
+                      serviceName = serviceName + "  ,  ";
+                    }
+                    serviceName =
+                      serviceName +
+                      ArrayHelper.getValue(
+                        props.serviceList.filter(
+                          (_it) => _it.id == serviceIdArray[z]
+                        ),
+                        "[0].name"
+                      );
+                  }
+                  if (item.startDate === "1900-01-01T00:00:00") {
+                    item.startDate = "";
+                  } else if (item.startDate !== "") {
+                    item.startDate = formatDate(
+                      item.startDate,
+                      DISPLAYDATEFORMATE
+                    );
+                  }
 
-                let formattedStartDate =
-                  item.startDate && item.startDate !== "1900-01-01T00:00:00"
-                    ? formatDate(item.startDate)
-                    : "";
+                  if (item.endDate === "1900-01-01T00:00:00") {
+                    item.endDate = "";
+                  } else if (item.endDate !== "") {
+                    item.endDate = formatDate(item.endDate, DISPLAYDATEFORMATE);
+                  }
 
-                let CreditCardFees = 0;
-                CreditCardFees =
-                  ArrayHelper.getValue(item, "serviceUSDClientDollar") -
-                  (ArrayHelper.getValue(item, "serviceNetUSD") +
-                    ArrayHelper.getValue(item, "serviceUSDCommission"));
+                  const currentCostFilter = updatedCostFilter(
+                    item.vendorTypeName
+                  );
 
-                return (
-                  <tr key={`toursList-${key}`}>
-                    {costFilter !== "withoutCost" && (
-                      <td className="txt-center">
-                        <input
-                          type="checkbox"
-                          name={`checkbox-${key}`}
-                          checked={selectedItems.has(key)}
-                          onChange={() => handleCheckboxChange(key, item)}
-                        />
-                      </td>
-                    )}
+                  let formattedStartDate =
+                    item.startDate && item.startDate !== "1900-01-01T00:00:00"
+                      ? formatDate(item.startDate)
+                      : "";
 
-                    <td>{key + 1}</td>
-                    <td>{formattedStartDate}</td>
-                    <td>{ArrayHelper.getValue(item, "vendorTypeName")}</td>
-                    <td>{ArrayHelper.getValue(item, "vendorName")}</td>
-                    <td>{ArrayHelper.getValue(item, "cityName")}</td>
+                  let CreditCardFees = 0;
+                  CreditCardFees =
+                    ArrayHelper.getValue(item, "serviceUSDClientDollar") -
+                    (ArrayHelper.getValue(item, "serviceNetUSD") +
+                      ArrayHelper.getValue(item, "serviceUSDCommission"));
 
-                    {costFilter === "withoutCost" ? (
-                      <>
-                        {/* <th>{ArrayHelper.getValue(item, "startDate")}</th> */}
-
-                        <th>{ArrayHelper.getValue(item, "description")}</th>
-                      </>
-                    ) : (
-                      <>
-                        <td>{serviceName}</td>
-                        <td className="txt-right">
-                          {Number(ArrayHelper.getValue(item, "rate")).toFixed(
-                            2
-                          )}
+                  return (
+                    <tr key={`toursList-${key}`}>
+                      {currentCostFilter !== "withoutCost" && (
+                        <td className="txt-center">
+                          <input
+                            type="checkbox"
+                            name={`checkbox-${key}`}
+                            checked={selectedItems.has(key)}
+                            onChange={() => handleCheckboxChange(key, item)}
+                          />
                         </td>
-                        <td className="txt-right">
-                          {ArrayHelper.getValue(item, "unit")}
-                        </td>
-                        <td className="txt-right">
-                          {ArrayHelper.getValue(item, "startDate") !== "" &&
-                          ArrayHelper.getValue(item, "endDate") !== ""
-                            ? DATEDURATION(
-                                ArrayHelper.getValue(item, "startDate"),
-                                ArrayHelper.getValue(item, "endDate")
+                      )}
+
+                      <td>{key + 1}</td>
+                      <td>{formattedStartDate}</td>
+                      <td>{ArrayHelper.getValue(item, "vendorTypeName")}</td>
+                      <td>{ArrayHelper.getValue(item, "vendorName")}</td>
+                      <td>{ArrayHelper.getValue(item, "cityName")}</td>
+
+                      {currentCostFilter === "withoutCost" ? (
+                        <>
+                          {/* <th>{ArrayHelper.getValue(item, "startDate")}</th> */}
+
+                          <th>{ArrayHelper.getValue(item, "description")}</th>
+                        </>
+                      ) : (
+                        <>
+                          <td>{serviceName}</td>
+                          <td className="txt-right">
+                            {Number(ArrayHelper.getValue(item, "rate")).toFixed(
+                              2
+                            )}
+                          </td>
+                          <td className="txt-right">
+                            {ArrayHelper.getValue(item, "unit")}
+                          </td>
+                          <td className="txt-right">
+                            {ArrayHelper.getValue(item, "startDate") !== "" &&
+                            ArrayHelper.getValue(item, "endDate") !== ""
+                              ? DATEDURATION(
+                                  ArrayHelper.getValue(item, "startDate"),
+                                  ArrayHelper.getValue(item, "endDate")
+                                )
+                              : ""}
+                          </td>
+                          <td className="txt-right">
+                            {Number(
+                              ArrayHelper.getValue(item, "cost", 1)
+                            ).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {Number(
+                              ArrayHelper.getValue(item, "serviceGTICommission")
+                            ).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {Number(
+                              ArrayHelper.getValue(item, "serviceGrossINR")
+                            ).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {(
+                              (ArrayHelper.getValue(
+                                item,
+                                "serviceGSTPercentage"
+                              ) *
+                                ArrayHelper.getValue(item, "serviceGrossINR")) /
+                              100
+                            ).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {Number(
+                              ArrayHelper.getValue(item, "serviceSellINR")
+                            ).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {Number(
+                              ArrayHelper.getValue(item, "serviceNetUSD")
+                            ).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {Number(
+                              ArrayHelper.getValue(item, "serviceUSDCommission")
+                            ).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {Number(CreditCardFees).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {Number(
+                              ArrayHelper.getValue(
+                                item,
+                                "serviceUSDClientDollar"
                               )
-                            : ""}
-                        </td>
-                        <td className="txt-right">
-                          {Number(
-                            ArrayHelper.getValue(item, "cost", 1)
-                          ).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {Number(
-                            ArrayHelper.getValue(item, "serviceGTICommission")
-                          ).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {Number(
-                            ArrayHelper.getValue(item, "serviceGrossINR")
-                          ).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {(
-                            (ArrayHelper.getValue(
-                              item,
-                              "serviceGSTPercentage"
-                            ) *
-                              ArrayHelper.getValue(item, "serviceGrossINR")) /
-                            100
-                          ).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {Number(
-                            ArrayHelper.getValue(item, "serviceSellINR")
-                          ).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {Number(
-                            ArrayHelper.getValue(item, "serviceNetUSD")
-                          ).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {Number(
-                            ArrayHelper.getValue(item, "serviceUSDCommission")
-                          ).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {Number(CreditCardFees).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {Number(
-                            ArrayHelper.getValue(item, "serviceUSDClientDollar")
-                          ).toFixed(2)}
-                        </td>
-                        <td className="txt-right">
-                          {Number(
-                            ArrayHelper.getValue(item, "agentCommissionValue")
-                          ).toFixed(2)}
-                        </td>
-                      </>
-                    )}
-                  </tr>
-                );
-              })}
+                            ).toFixed(2)}
+                          </td>
+                          <td className="txt-right">
+                            {Number(
+                              ArrayHelper.getValue(item, "agentCommissionValue")
+                            ).toFixed(2)}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  );
+                })}
 
-              {costFilter === "withCost" || costFilter === "all" ? (
+              {costFilter === "withCost" ? (
                 <tr>
                   <th
                     className="txt-right"

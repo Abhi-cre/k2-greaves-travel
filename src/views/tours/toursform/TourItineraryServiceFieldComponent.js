@@ -1335,7 +1335,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
     );
     console.log(
       "City ID in submitItinerarySerice:",
-      this.props.TourItineraryServiceData[0]?.cityId
+      this.props.TourItineraryServiceData[0]?.selectedState
     );
     let error = "";
 
@@ -1372,11 +1372,11 @@ class TourItineraryServiceFieldComponent extends React.Component {
     ) {
       console.log(
         "TourItineraryServiceData before submission:",
-        this.props.TourItineraryServiceData
+        this.state.TourItineraryServiceData
       );
       console.log(
-        "City ID in submitItinerarySerice:",
-        this.props.TourItineraryServiceData[0]?.cityId
+        "City cityName in submitItinerarySerice:",
+        this.state.TourItineraryServiceData[0]?.cityName
       );
 
       alert("Please provide the city.");
@@ -1558,7 +1558,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
       actionType: "add",
       serviceFeeList: [],
       selectedState: [],
-      cityId: [],
+      selectedCity: [],
       selectedCountry: [],
     });
   }
@@ -1638,11 +1638,11 @@ class TourItineraryServiceFieldComponent extends React.Component {
       );
       console.log(value, "value-=-=-");
 
-      console.log("API Response:", response); // Log the full response
+      console.log("API Response:", response);
 
       if (ArrayHelper.getValue(response, "isSuccess") === true) {
         this.setState({
-          data: response.cities, // Use the correct data array from the response
+          data: response.cities,
         });
       } else {
         this.setState({
@@ -1668,9 +1668,9 @@ class TourItineraryServiceFieldComponent extends React.Component {
   };
 
   handleCityChange = (value, option, index) => {
-    console.log("Selected value:", value);
-    console.log("Selected option:", option);
-    console.log("Selected index:", index);
+    console.log("Selected value:", value); // Value will be cityName here
+    console.log("Selected option:", option); // Option contains city data
+    console.log("Selected index:", index); // Index of the selected option
     console.log("Available cities:", this.state.data);
 
     console.log(
@@ -1678,7 +1678,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
       this.props.TourItineraryServiceData
     );
 
-    // Find the selected city by name
+    // Find the selected city based on cityName
     const selectedCity = this.state.data.find(
       (city) => city.cityName === value
     );
@@ -1686,37 +1686,41 @@ class TourItineraryServiceFieldComponent extends React.Component {
     if (selectedCity) {
       console.log("City found:", selectedCity);
 
-      // Create a copy of the TourItineraryServiceData to update it
       const updatedServiceData = [...this.props.TourItineraryServiceData];
 
-      // Check if the array is empty or index is invalid
       if (updatedServiceData.length === 0 || !updatedServiceData[index]) {
         console.error("Invalid index or empty data, can't update.");
       } else {
-        // Update the cityId in the selected itinerary
         updatedServiceData[index] = {
           ...updatedServiceData[index],
-          cityId: selectedCity.cityId, // Update cityId with the selected city's ID
-          cityName: selectedCity.cityName, // Ensure cityName is also updated
-          stateId: selectedCity.stateId, // Update stateId with the selected city's stateId
-          stateName: selectedCity.stateName, // Update stateName
-          countryId: selectedCity.countryId, // Update countryId
-          countryName: selectedCity.countryName, // Update countryName
+          cityId: selectedCity.cityId,
+          cityName: selectedCity.cityName,
+          stateId: selectedCity.stateId,
+          stateName: selectedCity.stateName,
+          countryId: selectedCity.countryId,
+          countryName: selectedCity.countryName,
         };
 
         console.log("Updated data in handleCityChange:", updatedServiceData);
 
         this.setState(
           {
-            TourItineraryServiceData: updatedServiceData,
-            cityId: selectedCity.cityId, // Store the correct cityId in local state
+            cityId: selectedCity.cityId,
             selectedCityId: selectedCity.cityId,
             selectedState: selectedCity.stateName,
             selectedCountry: selectedCity.countryName,
           },
           () => {
-            // This callback is triggered after the state has been updated
             console.log("Updated state after setState:", this.state);
+
+            // Call handleItineraryServiceInput after the city data has been updated
+            this.handleItineraryServiceInput(
+              index,
+              "cityId",
+              selectedCity.cityId,
+              "vendorTypeId",
+              "vendorId"
+            );
           }
         );
       }
@@ -1943,12 +1947,16 @@ class TourItineraryServiceFieldComponent extends React.Component {
 
                       <Select
                         showSearch
-                        value={cityId}
+                        value={this.state.selectedCity}
                         placeholder="Search for city"
                         notFoundContent={loading ? <Spin size="small" /> : null}
                         onSearch={this.handleSearch}
                         onChange={(value, option) =>
-                          this.handleCityChange(value, option, option.key)
+                          this.handleItineraryServiceInput(
+                            value,
+                            option,
+                            option.key
+                          )
                         } // Ensure you pass the correct index here
                         filterOption={false}
                         style={{ width: "100%" }}
@@ -2009,7 +2017,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
 
                       <Input
                         value={selectedCountry}
-                        placeholder="State"
+                        placeholder="Country"
                         readOnly
                       />
 
