@@ -1952,11 +1952,7 @@ class TourItineraryServiceFieldComponent extends React.Component {
                         notFoundContent={loading ? <Spin size="small" /> : null}
                         onSearch={this.handleSearch}
                         onChange={(value, option) =>
-                          this.handleItineraryServiceInput(
-                            value,
-                            option,
-                            option.key
-                          )
+                          this.handleCityChange(value, option, option.key)
                         } // Ensure you pass the correct index here
                         filterOption={false}
                         style={{ width: "100%" }}
