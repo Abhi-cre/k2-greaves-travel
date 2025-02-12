@@ -2485,24 +2485,54 @@ class ToursAddRecordComponent extends React.Component {
                     ) : (
                       ""
                     )}
-                    {/* {(this.state.AllTourItineraryData.length>0)?<li className="nav-item">
-                                    <a  onClick={()=>this.selectTab('clientMailLog')} className={`nav-link  costing ${(this.state.selectedTab=='clientMailLog')?'active':''}`}>
-                                   Client Mail Log 
-                                    </a>
-                                    
-                                </li>:''}
-                                {(this.state.AllTourItineraryData.length>0)?<li className="nav-item">
-                                    <a  onClick={()=>this.selectTab('vendorMailLog')} className={`nav-link  costing ${(this.state.selectedTab=='vendorMailLog')?'active':''}`}>
-                                    Vendor Mail Log 
-                                    </a>
-                                    
-                                </li>:''} */}
-                    {/* {((this.state.AllTourItineraryData.length>0)!=null)?<li className="nav-item">
-                                    <a  onClick={()=>this.selectTab('vendorMailCompose')} className={`nav-link  costing ${(this.state.selectedTab=='vendorMailCompose')?'active':''}`}>
-                                    Vendor Mail Compose
-                                    </a>
-                                    
-                                </li>:''}     */}
+                    {this.state.AllTourItineraryData.length > 0 ? (
+                      <li className="nav-item">
+                        <a
+                          onClick={() => this.selectTab("clientMailLog")}
+                          className={`nav-link  costing ${
+                            this.state.selectedTab == "clientMailLog"
+                              ? "active"
+                              : ""
+                          }`}
+                        >
+                          Client Mail Log
+                        </a>
+                      </li>
+                    ) : (
+                      ""
+                    )}
+                    {this.state.AllTourItineraryData.length > 0 ? (
+                      <li className="nav-item">
+                        <a
+                          onClick={() => this.selectTab("vendorMailLog")}
+                          className={`nav-link  costing ${
+                            this.state.selectedTab == "vendorMailLog"
+                              ? "active"
+                              : ""
+                          }`}
+                        >
+                          Vendor Mail Log
+                        </a>
+                      </li>
+                    ) : (
+                      ""
+                    )}
+                    {this.state.AllTourItineraryData.length > 0 != null ? (
+                      <li className="nav-item">
+                        <a
+                          onClick={() => this.selectTab("vendorMailCompose")}
+                          className={`nav-link  costing ${
+                            this.state.selectedTab == "vendorMailCompose"
+                              ? "active"
+                              : ""
+                          }`}
+                        >
+                          Vendor Mail Compose
+                        </a>
+                      </li>
+                    ) : (
+                      ""
+                    )}
                   </ul>
                 </div>
                 <div className="col-md-4 d-sm-inline-flex align-items-center justify-content-end">

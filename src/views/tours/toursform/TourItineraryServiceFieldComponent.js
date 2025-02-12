@@ -1668,67 +1668,144 @@ class TourItineraryServiceFieldComponent extends React.Component {
   };
 
   handleCityChange = (value, option, index) => {
-    console.log("Selected value:", value); // Value will be cityName here
-    console.log("Selected option:", option); // Option contains city data
-    console.log("Selected index:", index); // Index of the selected option
-    console.log("Available cities:", this.state.data);
-
-    console.log(
-      "TourItineraryServiceData before update:",
-      this.props.TourItineraryServiceData
-    );
-
-    // Find the selected city based on cityName
+    // Ensure the city exists in the 'data' array.
     const selectedCity = this.state.data.find(
       (city) => city.cityName === value
     );
 
-    if (selectedCity) {
-      console.log("City found:", selectedCity);
+    // If the city is not found in 'data', log an error and return.
+    if (!selectedCity) {
+      console.error("Selected city not found in data.");
+      return;
+    }
 
-      const updatedServiceData = [...this.props.TourItineraryServiceData];
+    // Ensure 'TourItineraryServiceData' exists and contains valid data.
+    if (
+      !this.props.TourItineraryServiceData ||
+      this.props.TourItineraryServiceData.length === 0
+    ) {
+      console.error("TourItineraryServiceData is empty.");
+      return;
+    }
 
-      if (updatedServiceData.length === 0 || !updatedServiceData[index]) {
-        console.error("Invalid index or empty data, can't update.");
-      } else {
-        updatedServiceData[index] = {
-          ...updatedServiceData[index],
-          cityId: selectedCity.cityId,
-          cityName: selectedCity.cityName,
-          stateId: selectedCity.stateId,
-          stateName: selectedCity.stateName,
-          countryId: selectedCity.countryId,
-          countryName: selectedCity.countryName,
-        };
+    // Get the first object in the TourItineraryServiceData array
+    const serviceData = this.props.TourItineraryServiceData[0];
 
-        console.log("Updated data in handleCityChange:", updatedServiceData);
+    // Find the city in the service data (use 'cityId' to match)
+    const cityIndex = serviceData.serviceList.findIndex(
+      (service) => service.cityId === selectedCity.cityId
+    );
 
-        this.setState(
-          {
-            cityId: selectedCity.cityId,
-            selectedCityId: selectedCity.cityId,
-            selectedState: selectedCity.stateName,
-            selectedCountry: selectedCity.countryName,
-          },
-          () => {
-            console.log("Updated state after setState:", this.state);
+    // If the city doesn't exist in the service data, add it.
+    if (cityIndex === -1) {
+      serviceData.serviceList.push({
+        cityId: selectedCity.cityId,
+        cityName: selectedCity.cityName,
+        stateId: selectedCity.stateId,
+        stateName: selectedCity.stateName,
+        countryId: selectedCity.countryId,
+        countryName: selectedCity.countryName,
+      });
+      console.log("City added to serviceList:", serviceData.serviceList);
+    } else {
+      // If the city exists, update the existing data.
+      serviceData.serviceList[cityIndex] = {
+        ...serviceData.serviceList[cityIndex],
+        cityId: selectedCity.cityId,
+        cityName: selectedCity.cityName,
+        stateId: selectedCity.stateId,
+        stateName: selectedCity.stateName,
+        countryId: selectedCity.countryId,
+        countryName: selectedCity.countryName,
+      };
+      console.log("Updated city data in serviceList:", serviceData.serviceList);
+    }
 
-            // Call handleItineraryServiceInput after the city data has been updated
-            this.handleItineraryServiceInput(
-              index,
-              "cityId",
-              selectedCity.cityId,
-              "vendorTypeId",
-              "vendorId"
-            );
-          }
+    // Now, update the component state with the selected city information.
+    this.setState(
+      {
+        cityId: selectedCity.cityId,
+        selectedCityId: selectedCity.cityId,
+        selectedCity: selectedCity.cityName,
+        selectedState: selectedCity.stateName,
+        selectedCountry: selectedCity.countryName,
+      },
+      () => {
+        console.log("Updated state after setState:", this.state);
+        // Pass the updated cityId to the itinerary service input
+        this.handleItineraryServiceInput(
+          index,
+          "cityId",
+          selectedCity.cityId,
+          "vendorTypeId",
+          "vendorId"
         );
       }
-    } else {
-      console.error("Selected city not found.");
-      alert("City not found, please select a valid city.");
-    }
+    );
   };
+
+  // handleCityChange = (value, option, index) => {
+  //   console.log("Selected value:", value); // Value will be cityName here
+  //   console.log("Selected option:", option); // Option contains city data
+  //   console.log("Selected index:", index); // Index of the selected option
+  //   console.log("Available cities:", this.state.data);
+
+  //   console.log(
+  //     "TourItineraryServiceData before update:",
+  //     this.props.TourItineraryServiceData
+  //   );
+
+  //   // Find the selected city based on cityName
+  //   const selectedCity = this.state.data.find(
+  //     (city) => city.cityName === value
+  //   );
+
+  //   if (selectedCity) {
+  //     console.log("City found:", selectedCity);
+
+  //     const updatedServiceData = [...this.props.TourItineraryServiceData];
+
+  //     if (updatedServiceData.length === 0 || !updatedServiceData[index]) {
+  //       console.error("Invalid index or empty data, can't update.");
+  //     } else {
+  //       updatedServiceData[index] = {
+  //         ...updatedServiceData[index],
+  //         cityId: selectedCity.cityId,
+  //         cityName: selectedCity.cityName,
+  //         stateId: selectedCity.stateId,
+  //         stateName: selectedCity.stateName,
+  //         countryId: selectedCity.countryId,
+  //         countryName: selectedCity.countryName,
+  //       };
+
+  //       console.log("Updated data in handleCityChange:", updatedServiceData);
+
+  //       this.setState(
+  //         {
+  //           cityId: selectedCity.cityId,
+  //           selectedCityId: selectedCity.cityId,
+  //           selectedState: selectedCity.stateName,
+  //           selectedCountry: selectedCity.countryName,
+  //         },
+  //         () => {
+  //           console.log("Updated state after setState:", this.state);
+
+  //           // Call handleItineraryServiceInput after the city data has been updated
+  //           this.handleItineraryServiceInput(
+  //             index,
+  //             "cityId",
+  //             selectedCity.cityId,
+  //             "vendorTypeId",
+  //             "vendorId"
+  //           );
+  //         }
+  //       );
+  //     }
+  //   } else {
+  //     console.error("Selected city not found.");
+  //     alert("City not found, please select a valid city.");
+  //   }
+  // };
 
   render() {
     let tourItineraryService =
