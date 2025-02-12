@@ -1668,35 +1668,16 @@ class TourItineraryServiceFieldComponent extends React.Component {
   };
 
   handleCityChange = (value, option, index) => {
-    // Ensure the city exists in the 'data' array.
     const selectedCity = this.state.data.find(
       (city) => city.cityName === value
     );
 
-    // If the city is not found in 'data', log an error and return.
-    if (!selectedCity) {
-      console.error("Selected city not found in data.");
-      return;
-    }
-
-    // Ensure 'TourItineraryServiceData' exists and contains valid data.
-    if (
-      !this.props.TourItineraryServiceData ||
-      this.props.TourItineraryServiceData.length === 0
-    ) {
-      console.error("TourItineraryServiceData is empty.");
-      return;
-    }
-
-    // Get the first object in the TourItineraryServiceData array
     const serviceData = this.props.TourItineraryServiceData[0];
 
-    // Find the city in the service data (use 'cityId' to match)
     const cityIndex = serviceData.serviceList.findIndex(
       (service) => service.cityId === selectedCity.cityId
     );
 
-    // If the city doesn't exist in the service data, add it.
     if (cityIndex === -1) {
       serviceData.serviceList.push({
         cityId: selectedCity.cityId,
@@ -1708,7 +1689,6 @@ class TourItineraryServiceFieldComponent extends React.Component {
       });
       console.log("City added to serviceList:", serviceData.serviceList);
     } else {
-      // If the city exists, update the existing data.
       serviceData.serviceList[cityIndex] = {
         ...serviceData.serviceList[cityIndex],
         cityId: selectedCity.cityId,
@@ -1721,7 +1701,6 @@ class TourItineraryServiceFieldComponent extends React.Component {
       console.log("Updated city data in serviceList:", serviceData.serviceList);
     }
 
-    // Now, update the component state with the selected city information.
     this.setState(
       {
         cityId: selectedCity.cityId,
