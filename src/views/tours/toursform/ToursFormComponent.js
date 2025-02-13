@@ -2485,7 +2485,7 @@ class ToursAddRecordComponent extends React.Component {
                     ) : (
                       ""
                     )}
-                    {this.state.AllTourItineraryData.length > 0 ? (
+                    {/* {this.state.AllTourItineraryData.length > 0 ? (
                       <li className="nav-item">
                         <a
                           onClick={() => this.selectTab("clientMailLog")}
@@ -2532,7 +2532,7 @@ class ToursAddRecordComponent extends React.Component {
                       </li>
                     ) : (
                       ""
-                    )}
+                    )} */}
                   </ul>
                 </div>
                 <div className="col-md-4 d-sm-inline-flex align-items-center justify-content-end">

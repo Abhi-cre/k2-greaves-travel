@@ -933,7 +933,7 @@ class ToursFieldFormComponent extends React.Component {
                 />
               </div>
               <div className="flex-fill p-1 dreavesStatus">
-                <label className="form-label"> Greaves Status..</label>
+                <label className="form-label"> Greaves Status</label>
                 <DropdownList
                   filter
                   data={this.state.greavesStatusList}

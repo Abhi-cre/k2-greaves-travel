@@ -285,7 +285,7 @@ class AssignToToureComponent extends React.Component {
         <div className={`content-right show `}>
           <div className="email-details card">
             <form method="post" role="form" onSubmit={this.submitRecord}>
-              <h6>Assign to Tour 11</h6>
+              <h6>Assign to Tour</h6>
               <div className="mail-compose">
                 <div className="form-group bordered-left-4 bordered-themeprimary">
                   <label htmlFor="to">Subject:</label>
@@ -338,21 +338,6 @@ class AssignToToureComponent extends React.Component {
                       ArrayHelper.getValue(item, "tourName")
                     }
                   />
-
-                  {/* <DropdownList
-                    filter
-                    data={this.state.greavesStatusList}
-                    placeholder="Select Greaves Status"
-                    onChange={(event: any) =>
-                      this.handleToursInput(0, "statusFromGreavesId", event.id)
-                    }
-                    defaultValue={ArrayHelper.getValue(
-                      this.props.toursData,
-                      "[0].statusFromGreavesId"
-                    )}
-                    dataKey="id"
-                    textField="name"
-                  /> */}
                 </div>
 
                 <div className="d-flex mailSend">

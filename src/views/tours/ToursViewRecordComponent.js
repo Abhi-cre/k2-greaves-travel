@@ -443,7 +443,7 @@ class ToursViewRecordComponent extends React.Component {
                   ) : (
                     ""
                   )}
-                  {this.state.TourItineraryData.length > 0 ? (
+                  {/* {this.state.TourItineraryData.length > 0 ? (
                     <li className="nav-item">
                       <a
                         onClick={() => this.selectTab("clientMailLog")}
@@ -486,7 +486,7 @@ class ToursViewRecordComponent extends React.Component {
                     >
                       Vendor Mail Compose
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
               <div
